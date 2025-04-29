@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model User {
+  id                String             @id @default(uuid())
+  email             String             @unique
+  firstName         String
+  lastName          String?
+  password          String
+  role              Role               @default(MEMBER)
+  isSubscribed      Boolean            @default(false)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  deletedAt         DateTime?
+  posts             Post[]
+  savedCalculations SavedCalculation[]
+  SubscriptionToken SubscriptionToken?
+}
+
+model SubscriptionToken {
+  id        String   @id @unique
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  endpoint  String
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SavedCalculation {
+  id                 String              @id @unique
+  user               User                @relation(fields: [userId], references: [id])
+  userId             String
+  createdAt          DateTime            @default(now())
+  deletedAt          DateTime            @updatedAt
+  calculationDetails CalculationDetail[]
+}
+
+model CalculationDetail {
+  id                 String           @id @unique
+  SavedCalculation   SavedCalculation @relation(fields: [savedCalculationId], references: [id])
+  savedCalculationId String
+  material           material         @relation(fields: [materialId], references: [id])
+  materialId         String
+  weight             Decimal          @db.Decimal(10, 2)
+  calculatedCn       Decimal          @db.Decimal(10, 2)
+}
+
+model material {
+  id                 String              @id @unique
+  name               String              @unique
+  carbon             Decimal             @db.Decimal(10, 2)
+  nitrogen           Decimal             @db.Decimal(10, 2)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  deletedAt          DateTime?
+  calculationDetails CalculationDetail[]
+}
+
+model Post {
+  id          String    @id @unique
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  title       String
+  description String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  tags        Tag[]
+  comments    Comment[]
+}
+
+model Tag {
+  id        String    @id @unique
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  posts     Post[]
+}
+
+model Comment {
+  id             String         @id @unique
+  post           Post           @relation(fields: [postId], references: [id])
+  postId         String
+  message        String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deletedAt      DateTime?
+  commentReplies CommentReply[]
+}
+
+model CommentReply {
+  id        String    @id @unique
+  comment   Comment   @relation(fields: [commentId], references: [id])
+  commentId String
+  message   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
