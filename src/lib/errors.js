@@ -8,6 +8,20 @@ export class NotFoundError extends Error {
 export class AuthenticationError extends Error {
   constructor(message) {
     super(message);
-    this.name = 'NotFoundError';
+    this.name = 'AuthenticationError';
+  }
+}
+
+export class InputValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'ValidationError';
+  }
+}
+
+export class PrismaCustomError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'PrismaCustomError';
   }
 }

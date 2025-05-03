@@ -1,5 +1,7 @@
 import { createAuthClient } from 'better-auth/react'; // make sure to import from better-auth/react
-import { APIError } from 'better-auth/api';
+import { adminClient } from 'better-auth';
 
-export const authClient = createAuthClient();
-
+// TODO: YOU SHOULD DEFINE AND CONFIG ADMINCLIENT()!!!
+export const authClient = createAuthClient({
+  plugins: [adminClient()],
+});
