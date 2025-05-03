@@ -18,6 +18,9 @@ export const auth = betterAuth({
     fields: {
       name: 'fullName',
     },
+    changeEmail: {
+      enabled: true,
+    },
   },
   password: {
     hash: async (password) => {
@@ -33,5 +36,10 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24,
   },
-  plugins: [admin()],
+  plugins: [
+    admin({
+      adminRoles: ['admin'],
+      adminUserIds: ['u3IShMhOF3tFVD1ycZLXsKWa0LDS4VV'],
+    }),
+  ],
 });
