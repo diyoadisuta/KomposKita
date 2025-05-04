@@ -10,7 +10,6 @@ import {
 export class MaterialService {
   static async createMaterial({ name, carbon, nitrogen }) {
     const generatedId = nanoid(10);
-
     const { error, value } = materialSchema.validate({
       name,
       carbon,
@@ -35,9 +34,7 @@ export class MaterialService {
     const materialData = await prisma.material.create({
       data: {
         id: `material-${generatedId}`,
-        name: value.name,
-        carbon: value.carbon,
-        nitrogen: value.nitrogen,
+        ...value,
       },
     });
 
@@ -98,9 +95,7 @@ export class MaterialService {
         id: id,
       },
       data: {
-        name: value.name,
-        carbon: value.carbon,
-        nitrogen: value.nitrogen,
+        ...value,
       },
     });
   }
