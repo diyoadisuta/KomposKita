@@ -10,8 +10,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -47,6 +48,8 @@ model SubscriptionToken {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+
+  @@map("subscription_token")
 }
 
 model SavedCalculation {
@@ -57,22 +60,26 @@ model SavedCalculation {
   updatedAt          DateTime            @updatedAt
   deletedAt          DateTime?
   calculationDetails CalculationDetail[]
+
+  @@map("saved_calculation")
 }
 
 model CalculationDetail {
   id                 String           @id @unique
   SavedCalculation   SavedCalculation @relation(fields: [savedCalculationId], references: [id])
   savedCalculationId String
-  material           material         @relation(fields: [materialId], references: [id])
+  material           Material         @relation(fields: [materialId], references: [id])
   materialId         String
   weight             Decimal          @db.Decimal(10, 2)
   calculatedCn       Decimal          @db.Decimal(10, 2)
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   deletedAt          DateTime?
+
+  @@map("calculation_detail")
 }
 
-model material {
+model Material {
   id                 String              @id @unique
   name               String              @unique
   carbon             Decimal             @db.Decimal(10, 2)
@@ -81,6 +88,8 @@ model material {
   updatedAt          DateTime            @updatedAt
   deletedAt          DateTime?
   calculationDetails CalculationDetail[]
+
+  @@map("material")
 }
 
 model Post {
@@ -94,6 +103,8 @@ model Post {
   deletedAt   DateTime?
   tags        Tag[]
   comments    Comment[]
+
+  @@map("post")
 }
 
 model Tag {
@@ -103,6 +114,8 @@ model Tag {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
   posts     Post[]
+
+  @@map("tag")
 }
 
 model Comment {
@@ -114,6 +127,8 @@ model Comment {
   updatedAt      DateTime       @updatedAt
   deletedAt      DateTime?
   commentReplies CommentReply[]
+
+  @@map("comment")
 }
 
 model CommentReply {
@@ -124,6 +139,8 @@ model CommentReply {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+
+  @@map("comment_reply")
 }
 
 model Session {

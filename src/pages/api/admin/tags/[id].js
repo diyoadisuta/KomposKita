@@ -1,0 +1,118 @@
+import { auth } from '@/lib/auth';
+import {
+  InputValidationError,
+  NotFoundError,
+  PrismaCustomError,
+} from '@/lib/errors';
+import { TagService } from '@/services/tag';
+
+export default async function handler(req, res) {
+  const { id } = req.query;
+
+  switch (req.method) {
+    case 'PUT':
+      const { name } = req.body;
+
+      try {
+        const session = await auth.api.getSession({
+          headers: req.headers,
+        });
+
+        if (!session) {
+          return res.status(401).json({
+            success: false,
+            message: 'Please login first',
+          });
+        }
+
+        if (session.user.role !== 'admin') {
+          return res.status(403).json({
+            success: false,
+            message: 'You dont have an access',
+          });
+        }
+
+        await TagService.updateTag({ id, name });
+        res
+          .status(200)
+          .json({ success: true, message: 'Tag is updated successfully' });
+      } catch (error) {
+        console.error('PUTtag: error:', error);
+
+        if (error instanceof NotFoundError) {
+          return res
+            .status(404)
+            .json({ success: false, message: error.message });
+        }
+
+        if (error instanceof InputValidationError) {
+          return res
+            .status(400)
+            .json({ success: false, message: error.message });
+        }
+
+        if (error instanceof PrismaCustomError) {
+          return res
+            .status(400)
+            .json({ message: false, message: error.message });
+        }
+
+        res
+          .status(500)
+          .json({ success: false, message: 'Internal server error' });
+      }
+      break;
+
+    case 'DELETE':
+      try {
+        const session = await auth.api.getSession({
+          headers: req.headers,
+        });
+
+        if (!session) {
+          return res.status(401).json({
+            success: false,
+            message: 'Please login first',
+          });
+        }
+
+        if (session.user.role !== 'admin') {
+          return res.status(403).json({
+            success: false,
+            message: 'You dont have an access',
+          });
+        }
+
+        await TagService.deleteTag(id);
+        res
+          .status(200)
+          .json({ success: true, message: 'Tag is deleted successfully' });
+      } catch (error) {
+        console.error('DELETEtag: error:', error);
+
+        if (error instanceof NotFoundError) {
+          return res
+            .status(404)
+            .json({ success: false, message: error.message });
+        }
+
+        if (error instanceof PrismaCustomError) {
+          return res
+            .status(400)
+            .json({ success: false, message: error.message });
+        }
+
+        res
+          .status(500)
+          .json({ success: false, message: 'Internal server error' });
+      }
+      break;
+
+    default:
+      res.status(404).json({
+        success: false,
+        message: `This url cannot be accessed by ${req.method} method`,
+      });
+      break;
+  }
+}

@@ -30,7 +30,6 @@ export default async function handler(req, res) {
           carbon,
           nitrogen,
         });
-
         res.status(201).json({
           success: true,
           message: 'Material is created successfully',
@@ -38,6 +37,7 @@ export default async function handler(req, res) {
         });
       } catch (error) {
         console.error('postMaterial: error:', error);
+        
         if (error instanceof PrismaCustomError) {
           res.status(400).json({ success: false, message: error.message });
           return;
