@@ -1,4 +1,8 @@
-import { InputValidationError, NotFoundError } from '@/lib/errors';
+import {
+  AuthorizationError,
+  InputValidationError,
+  NotFoundError,
+} from '@/lib/errors';
 import prisma from '@/lib/prisma';
 import { postSchema } from '@/validations/schemas/post-schema';
 import { nanoid } from 'nanoid';
@@ -29,6 +33,9 @@ export class PostService {
 
   static async getPosts() {
     return await prisma.post.findMany({
+      where: {
+        deletedAt: null,
+      },
       include: {
         tags: {
           select: {
@@ -39,7 +46,7 @@ export class PostService {
     });
   }
 
-  static async updatePost({ id, title, description }) {
+  static async updatePost({ id, sessionUserId, title, description, tagId }) {
     const findPost = await prisma.post.findUnique({
       where: {
         id: id,
@@ -48,6 +55,10 @@ export class PostService {
 
     if (!findPost) {
       throw new NotFoundError('Post is not found');
+    }
+
+    if (findPost.userId !== sessionUserId) {
+      throw new AuthorizationError('You dont have permission');
     }
 
     const { error, value } = postSchema.validate({ title, description });
@@ -60,7 +71,41 @@ export class PostService {
       where: {
         id: id,
       },
-      data: { ...value },
+      data: {
+        ...value,
+        tags: {
+          connect: {
+            id: tagId,
+          },
+        },
+      },
+    });
+  }
+
+  // TODO: For repeatable code like findpost should refactor later to independent function
+  static async deletePost({ id, sessionUserId }) {
+    const findPost = await prisma.post.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!findPost) {
+      throw new NotFoundError('Post is not found');
+    }
+
+    if (findPost.userId !== sessionUserId) {
+      throw new AuthorizationError('You dont have permission');
+    }
+
+    // FE Scenario if user deleted post the comment wont erased but the post "This post deleted by authors"
+    await prisma.post.update({
+      where: {
+        id: id,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
     });
   }
 }
