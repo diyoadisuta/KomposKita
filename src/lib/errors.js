@@ -12,6 +12,13 @@ export class AuthenticationError extends Error {
   }
 }
 
+export class AuthorizationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'AuthorizationError';
+  }
+}
+
 export class InputValidationError extends Error {
   constructor(message) {
     super(message);
