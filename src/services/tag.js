@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid';
 
 export class TagService {
   static async createTag({ name }) {
-    const generatedId = nanoid(10);
+    const generatedId = nanoid(8);
     const { error, value } = tagSchema.validate({ name });
 
     if (error) {
@@ -28,7 +28,7 @@ export class TagService {
 
     const tagData = await prisma.tag.create({
       data: {
-        id: `tag-${generatedId}`,
+        id: generatedId,
         ...value,
       },
     });
@@ -109,7 +109,7 @@ export class TagService {
       },
     });
 
-    console.log(findConnectedPosts)
+    console.log(findConnectedPosts);
 
     if (findConnectedPosts.posts) {
       throw new PrismaCustomError('There is post associated with this tag');

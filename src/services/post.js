@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid';
 
 export class PostService {
   static async createPost({ userId, title, description, tagId }) {
-    const generatedId = nanoid(10);
+    const generatedId = nanoid(8);
     const { error, value } = postSchema.validate({ title, description });
 
     if (error) {
@@ -17,7 +17,7 @@ export class PostService {
     }
     const postData = await prisma.post.create({
       data: {
-        id: `post-${generatedId}`,
+        id: generatedId,
         userId: userId,
         ...value,
         tags: {
