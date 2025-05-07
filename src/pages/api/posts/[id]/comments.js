@@ -7,10 +7,10 @@ export default async function handler(req, res) {
 
   switch (req.method) {
     case 'POST':
-      const { message } = req.body;
+      const { message, parentId } = req.body;
 
       try {
-        const session = auth.api.getSession({
+        const session = await auth.api.getSession({
           headers: req.headers,
         });
 
@@ -20,7 +20,12 @@ export default async function handler(req, res) {
             .json({ success: false, message: 'Please login first' });
         }
 
-        const commentData = await CommentService.createComment({ id, message });
+        const commentData = await CommentService.createComment({
+          id,
+          userId: session.user.id,
+          parentId,
+          message,
+        });
         res.status(201).json({
           success: true,
           message: 'Comment is created successfully',

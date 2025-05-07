@@ -102,14 +102,11 @@ export class TagService {
       throw new NotFoundError('Tag is not found');
     }
 
-    // TODO: SET ONLY NO POST CONNECTED TO RELATED TAGS THAT CAN BE DELETED
     const findConnectedPosts = await prisma.tag.findMany({
       include: {
         posts: true,
       },
     });
-
-    console.log(findConnectedPosts);
 
     if (findConnectedPosts.posts) {
       throw new PrismaCustomError('There is post associated with this tag');
