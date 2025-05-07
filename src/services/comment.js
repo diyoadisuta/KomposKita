@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid';
 
 export class CommentService {
   //id is postId, trying to use postId but error occurs, fix it
-  static async createComment({ id, message }) {
+  static async createComment({ id, userId, parentId = null, message }) {
     const generatedId = nanoid(8);
 
     const findPost = await prisma.post.findUnique({
@@ -32,11 +32,13 @@ export class CommentService {
       data: {
         id: generatedId,
         postId: id,
+        userId,
+        parentId,
         ...value,
       },
     });
 
-    return commentData;
+    return;
   }
 
   static async getPostComments(id) {
@@ -58,6 +60,14 @@ export class CommentService {
     });
   }
 
+  static async getCommentReplies(cid) {
+    return await prisma.comment.findMany({
+      where: {
+        parentId: cid,
+      },
+    });
+  }
+
   static async updatePostComment({ cid, sessionUserId, message }) {
     const findPostComment = await prisma.comment.findUnique({
       where: {
@@ -69,13 +79,7 @@ export class CommentService {
       throw new NotFoundError('Comment is not found');
     }
 
-    const postAuthor = await prisma.post.findUnique({
-      where: {
-        id: findPostComment.postId,
-      },
-    });
-
-    if (postAuthor.userId !== sessionUserId) {
+    if (findPostComment.userId !== sessionUserId) {
       throw new AuthorizationError('You dont have permission');
     }
 
@@ -106,13 +110,7 @@ export class CommentService {
       throw new NotFoundError('Comment is not found');
     }
 
-    const postAuthor = await prisma.post.findUnique({
-      where: {
-        id: findPostComment.postId,
-      },
-    });
-
-    if (postAuthor.userId !== sessionUserId) {
+    if (findPostComment.userId !== sessionUserId) {
       throw new AuthorizationError('You dont have permission');
     }
 

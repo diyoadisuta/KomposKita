@@ -24,6 +24,7 @@ model User {
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   posts             Post[]
+  comments          Comment[]
   savedCalculations SavedCalculation[]
   SubscriptionToken SubscriptionToken?
   emailVerified     Boolean
@@ -119,28 +120,18 @@ model Tag {
 }
 
 model Comment {
-  id             String         @id @unique
-  post           Post           @relation(fields: [postId], references: [id])
-  postId         String
-  message        String
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  deletedAt      DateTime?
-  commentReplies CommentReply[]
-
-  @@map("comment")
-}
-
-model CommentReply {
   id        String    @id @unique
-  comment   Comment   @relation(fields: [commentId], references: [id])
-  commentId String
+  post      Post      @relation(fields: [postId], references: [id])
+  postId    String
   message   String
+  parentId  String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
 
-  @@map("comment_reply")
+  @@map("comment")
 }
 
 model Session {

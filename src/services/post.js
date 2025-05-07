@@ -82,7 +82,6 @@ export class PostService {
     });
   }
 
-  // TODO: For repeatable code like findpost should refactor later to independent function
   static async deletePost({ id, sessionUserId }) {
     const findPost = await prisma.post.findUnique({
       where: {
