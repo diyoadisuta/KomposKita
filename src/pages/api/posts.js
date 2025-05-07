@@ -19,9 +19,8 @@ export default async function handler(req, res) {
           });
         }
 
-        const userId = session.user.id;
         const postData = await PostService.createPost({
-          userId,
+          userId: session.user.id,
           title,
           description,
           tagId,
@@ -39,6 +38,10 @@ export default async function handler(req, res) {
             .status(400)
             .json({ success: false, message: error.message });
         }
+
+        res
+          .status(500)
+          .json({ success: false, message: 'Internal server error' });
       }
       break;
 
