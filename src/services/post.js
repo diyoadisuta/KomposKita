@@ -8,17 +8,19 @@ import { postSchema } from '@/validations/schemas/post-schema';
 import { nanoid } from 'nanoid';
 
 export class PostService {
-  static async createPost({ userId, title, description, tagId }) {
+  static async createPost({ userId, userName, title, description, tagId }) {
     const generatedId = nanoid(8);
     const { error, value } = postSchema.validate({ title, description });
 
     if (error) {
       throw new InputValidationError(error.details[0].message);
     }
+
     const postData = await prisma.post.create({
       data: {
         id: generatedId,
         userId: userId,
+        author: userName,
         ...value,
         tags: {
           connect: {
@@ -28,11 +30,16 @@ export class PostService {
       },
     });
 
-    return postData;
+    return {
+      id: postData.id,
+      title: postData.title,
+      description: postData.description,
+      createdAt: postData.createdAt,
+    };
   }
 
   static async getPosts() {
-    return await prisma.post.findMany({
+    const postsData = await prisma.post.findMany({
       where: {
         deletedAt: null,
       },
@@ -44,21 +51,79 @@ export class PostService {
         },
       },
     });
+
+    return postsData.map(
+      ({ id, author, title, description, tags, createdAt, updatedAt }) => ({
+        id,
+        author,
+        title,
+        description,
+        tag: tags[0].name,
+        createdAt,
+        updatedAt,
+      })
+    );
+  }
+
+  static async getPostById(id) {
+    const postData = await prisma.post.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        author: true,
+        title: true,
+        description: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!postData) {
+      throw new NotFoundError('Post is not found');
+    }
+
+    return postData;
+  }
+
+  static async getUserPosts(userId) {
+    const userPostsData = await prisma.post.findMany({
+      where: {
+        deletedAt: null,
+        userId: userId,
+      },
+      include: {
+        tags: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return userPostsData.map(
+      ({ id, title, description, tags, createdAt, updatedAt }) => ({
+        id,
+        title,
+        description,
+        tag: tags[0].name,
+        createdAt,
+        updatedAt,
+      })
+    );
   }
 
   static async updatePost({ id, sessionUserId, title, description, tagId }) {
     const findPost = await prisma.post.findUnique({
       where: {
         id: id,
+        userId: sessionUserId,
       },
     });
 
     if (!findPost) {
       throw new NotFoundError('Post is not found');
-    }
-
-    if (findPost.userId !== sessionUserId) {
-      throw new AuthorizationError('You dont have permission');
     }
 
     const { error, value } = postSchema.validate({ title, description });
@@ -86,6 +151,7 @@ export class PostService {
     const findPost = await prisma.post.findUnique({
       where: {
         id: id,
+        userId: sessionUserId,
       },
     });
 
@@ -93,11 +159,6 @@ export class PostService {
       throw new NotFoundError('Post is not found');
     }
 
-    if (findPost.userId !== sessionUserId) {
-      throw new AuthorizationError('You dont have permission');
-    }
-
-    // FE Scenario if user deleted post the comment wont erased but the post "This post deleted by authors"
     await prisma.post.update({
       where: {
         id: id,

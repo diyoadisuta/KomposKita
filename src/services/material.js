@@ -38,17 +38,38 @@ export class MaterialService {
       },
     });
 
-    return materialData;
+    return {
+      id: materialData.id,
+      name: materialData.name,
+      carbon: materialData.carbon,
+      nitrogen: materialData.nitrogen,
+      createdAt: materialData.createdAt,
+    };
   }
 
   static async getMaterials() {
-    return await prisma.material.findMany();
+    return await prisma.material.findMany({
+      select: {
+        id: true,
+        name: true,
+        carbon: true,
+        nitrogen: true,
+        createdAt: true,
+      },
+    });
   }
 
   static async getMaterialById(id) {
     const materialData = await prisma.material.findUnique({
       where: {
         id: id,
+      },
+      select: {
+        id: true,
+        name: true,
+        carbon: true,
+        nitrogen: true,
+        createdAt: true,
       },
     });
 

@@ -33,17 +33,31 @@ export class TagService {
       },
     });
 
-    return tagData;
+    return {
+      id: tagData.id,
+      name: tagData.name,
+      createdAt: tagData.createdAt,
+    };
   }
 
   static async getTags() {
-    return await prisma.tag.findMany();
+    return await prisma.tag.findMany({
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+      },
+    });
   }
 
   static async getTagById(id) {
     const tagData = await prisma.tag.findUnique({
       where: {
         id: id,
+      },
+      omit: {
+        updatedAt: true,
+        deletedAt: true,
       },
     });
 

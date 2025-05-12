@@ -8,8 +8,13 @@ import { commentSchema } from '@/validations/schemas/comment-schema';
 import { nanoid } from 'nanoid';
 
 export class CommentService {
-  //id is postId, trying to use postId but error occurs, fix it
-  static async createComment({ id, userId, parentId = null, message }) {
+  static async createComment({
+    id,
+    userId,
+    userName,
+    parentId = null,
+    message,
+  }) {
     const generatedId = nanoid(8);
 
     const findPost = await prisma.post.findUnique({
@@ -32,13 +37,19 @@ export class CommentService {
       data: {
         id: generatedId,
         postId: id,
+        author: userName,
         userId,
         parentId,
         ...value,
       },
     });
 
-    return;
+    return {
+      id: commentData.id,
+      author: commentData.author,
+      message: commentData.message,
+      createdAt: commentData.createdAt,
+    };
   }
 
   static async getPostComments(id) {
@@ -52,35 +63,56 @@ export class CommentService {
       throw new NotFoundError('Post is not found');
     }
 
-    return await prisma.comment.findMany({
+    const postCommentsData = await prisma.comment.findMany({
       where: {
         postId: id,
         deletedAt: null,
       },
-    });
-  }
-
-  static async getCommentReplies(cid) {
-    return await prisma.comment.findMany({
-      where: {
-        parentId: cid,
+      select: {
+        id: true,
+        author: true,
+        message: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
+
+    return postCommentsData;
   }
 
-  static async updatePostComment({ cid, sessionUserId, message }) {
+  static async getCommentReplies({ id, cid }) {
+    const commentRepliesData = await prisma.comment.findUnique({
+      where: {
+        id: cid,
+        postId: id,
+      },
+      select: {
+        id: true,
+        author: true,
+        message: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!commentRepliesData) {
+      throw new NotFoundError('Comment is not found');
+    }
+
+    return commentRepliesData;
+  }
+
+  static async updatePostComment({ id, cid, sessionUserId, message }) {
     const findPostComment = await prisma.comment.findUnique({
       where: {
         id: cid,
+        postId: id,
+        userId: sessionUserId,
       },
     });
 
     if (!findPostComment) {
       throw new NotFoundError('Comment is not found');
-    }
-
-    if (findPostComment.userId !== sessionUserId) {
-      throw new AuthorizationError('You dont have permission');
     }
 
     const { error, value } = commentSchema.validate({ message });
@@ -99,19 +131,17 @@ export class CommentService {
     });
   }
 
-  static async deletePostComment({ cid, sessionUserId }) {
+  static async deletePostComment({ id, cid, sessionUserId }) {
     const findPostComment = await prisma.comment.findUnique({
       where: {
         id: cid,
+        postId: id,
+        userId: sessionUserId,
       },
     });
 
     if (!findPostComment) {
       throw new NotFoundError('Comment is not found');
-    }
-
-    if (findPostComment.userId !== sessionUserId) {
-      throw new AuthorizationError('You dont have permission');
     }
 
     await prisma.comment.update({

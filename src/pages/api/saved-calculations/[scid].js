@@ -1,14 +1,12 @@
 import { auth } from '@/lib/auth';
-import { InputValidationError, NotFoundError } from '@/lib/errors';
-import { CommentService } from '@/services/comment';
+import { NotFoundError } from '@/lib/errors';
+import { SavedCalculationService } from '@/services/saved-calculation';
 
 export default async function handler(req, res) {
-  const { id } = req.query;
+  const { scid } = req.query;
 
   switch (req.method) {
-    case 'POST':
-      const { message, parentId } = req.body;
-
+    case 'GET':
       try {
         const session = await auth.api.getSession({
           headers: req.headers,
@@ -20,30 +18,19 @@ export default async function handler(req, res) {
             .json({ success: false, message: 'Please login first' });
         }
 
-        const commentData = await CommentService.createComment({
-          id,
-          userId: session.user.id,
-          userName: session.user.name,
-          parentId,
-          message,
-        });
-        res.status(201).json({
+        const savedCalculationData =
+          await SavedCalculationService.getSavedCalculationById(scid);
+        res.status(200).json({
           success: true,
-          message: 'Comment is created successfully',
-          data: commentData,
+          message: 'Saved calculation detail is fetced successfully',
+          data: savedCalculationData,
         });
       } catch (error) {
-        console.error('POSTcomment: error:', error);
+        console.error('GETsavedCalcDetail: error:', error);
 
         if (error instanceof NotFoundError) {
           return res
             .status(404)
-            .json({ success: false, message: error.message });
-        }
-
-        if (error instanceof InputValidationError) {
-          return res
-            .status(400)
             .json({ success: false, message: error.message });
         }
 
@@ -53,16 +40,28 @@ export default async function handler(req, res) {
       }
       break;
 
-    case 'GET':
+    case 'DELETE':
       try {
-        const commentData = await CommentService.getPostComments(id);
+        const session = await auth.api.getSession({
+          headers: req.headers,
+        });
+
+        if (!session) {
+          return res
+            .status(401)
+            .json({ success: false, message: 'Please login first' });
+        }
+
+        await SavedCalculationService.deleteSavedCalculation({
+          sessionUserId: session.user.id,
+          scid,
+        });
         res.status(200).json({
           success: true,
-          message: 'Comments is fetched successfully',
-          data: commentData,
+          message: 'Saved calculation is deleted successfully',
         });
       } catch (error) {
-        console.error('GETcomments: error', error);
+        console.error('DELETEsavedcalc: error:', error);
 
         if (error instanceof NotFoundError) {
           return res
@@ -72,12 +71,12 @@ export default async function handler(req, res) {
 
         res
           .status(500)
-          .json({ success: false, message: 'Something went wrongs' });
+          .json({ success: false, message: 'Something went wrong' });
       }
       break;
 
     default:
-      res.status(404).json({
+      res.status(405).json({
         success: false,
         message: `This url cannot be accessed by ${req.method} method`,
       });

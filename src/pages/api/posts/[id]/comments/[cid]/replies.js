@@ -1,8 +1,10 @@
 import { auth } from '@/lib/auth';
+import { NotFoundError } from '@/lib/errors';
 import { CommentService } from '@/services/comment';
 
 export default async function handler(req, res) {
-  const { cid } = req.query;
+  const { id, cid } = req.query;
+
   switch (req.method) {
     case 'GET':
       try {
@@ -16,7 +18,10 @@ export default async function handler(req, res) {
             .json({ success: false, message: 'Please login first' });
         }
 
-        const commentRepliesData = await CommentService.getCommentReplies(cid);
+        const commentRepliesData = await CommentService.getCommentReplies({
+          id,
+          cid,
+        });
         res.status(200).json({
           success: true,
           message: 'Comment replies is fetched successfully',
@@ -24,6 +29,12 @@ export default async function handler(req, res) {
         });
       } catch (error) {
         console.error('GETcommentreplies: error', error);
+
+        if (error instanceof NotFoundError) {
+          return res
+            .status(404)
+            .json({ success: false, message: error.message });
+        }
 
         res
           .status(500)

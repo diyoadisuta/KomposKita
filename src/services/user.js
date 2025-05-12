@@ -54,6 +54,13 @@ export class UserService {
       where: {
         id: userId,
       },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        image: true,
+        isSubscribed: true,
+      }
     });
 
     if (!userData) {

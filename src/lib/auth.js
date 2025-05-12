@@ -10,7 +10,7 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    autoSignIn: false,
+    autoSignIn: true,
     minPasswordLength: 8,
   },
   user: {
@@ -31,15 +31,17 @@ export const auth = betterAuth({
     verify: async ({ hash, password }) => {
       return await bcrypt.compare(password, hash);
     },
+    session: {
+      cookieCache: {
+        enabled: true,
+        maxAge: 3 * 24 * 60 * 60,
+      },
+    },
   },
-  session: {
-    expiresIn: 60 * 60 * 24 * 7,
-    updateAge: 60 * 60 * 24,
-  },
+
   plugins: [
     admin({
       adminRoles: ['admin'],
-      adminUserIds: ['u3IShMhOF3tFVD1ycZLXsKWa0LDS4VV'],
     }),
   ],
 });
