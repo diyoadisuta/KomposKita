@@ -10,16 +10,16 @@ export default async function handler(req, res) {
           message: 'Tags is fetched successfuly',
           data: tagData,
         });
-      } catch {
+      } catch (error) {
         console.error('GETpost: error', error);
         res
           .status(500)
-          .json({ success: false, message: 'Internal server error' });
+          .json({ success: false, message: 'Something went wrong' });
       }
       break;
 
     default:
-      res.status(404).json({
+      res.status(405).json({
         success: false,
         message: `This url cannot be accessed by ${req.method} method`,
       });

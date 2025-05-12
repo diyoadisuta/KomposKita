@@ -7,7 +7,7 @@ import {
 import { CommentService } from '@/services/comment';
 
 export default async function handler(req, res) {
-  const { cid } = req.query;
+  const { id, cid } = req.query;
 
   switch (req.method) {
     case 'PUT':
@@ -25,6 +25,7 @@ export default async function handler(req, res) {
         }
 
         await CommentService.updatePostComment({
+          id,
           cid,
           sessionUserId: session.user.id,
           message,
@@ -55,7 +56,7 @@ export default async function handler(req, res) {
 
         res
           .status(500)
-          .json({ success: false, message: 'Internal server error' });
+          .json({ success: false, message: 'Something went wrong' });
       }
       break;
 
@@ -72,6 +73,7 @@ export default async function handler(req, res) {
         }
 
         await CommentService.deletePostComment({
+          id,
           cid,
           sessionUserId: session.user.id,
         });
@@ -95,12 +97,12 @@ export default async function handler(req, res) {
 
         res
           .status(500)
-          .json({ success: false, message: 'Internal server error' });
+          .json({ success: false, message: 'Something went wrong' });
       }
       break;
 
     default:
-      res.status(404).json({
+      res.status(405).json({
         success: false,
         message: `This url cannot be accessed by ${req.method} method`,
       });

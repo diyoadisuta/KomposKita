@@ -10,6 +10,29 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   switch (req.method) {
+    case 'GET':
+      try {
+        const postData = await PostService.getPostById(id);
+        res.status(200).json({
+          success: true,
+          message: 'Post is fetched successfully',
+          data: postData,
+        });
+      } catch (error) {
+        console.error('GETpostbyid: error:', error);
+
+        if (error instanceof NotFoundError) {
+          return res
+            .status(404)
+            .json({ success: false, message: error.message });
+        }
+
+        res
+          .status(500)
+          .json({ success: false, message: 'Something went wrong' });
+      }
+      break;
+
     case 'PUT':
       const { title, description, tagId } = req.body;
 
@@ -58,7 +81,7 @@ export default async function handler(req, res) {
 
         res
           .status(500)
-          .json({ success: false, message: 'Internal server error' });
+          .json({ success: false, message: 'Something went wrong' });
       }
       break;
 
@@ -99,12 +122,12 @@ export default async function handler(req, res) {
 
         res
           .status(500)
-          .json({ success: false, message: 'Internal server error' });
+          .json({ success: false, message: 'Something went wrong' });
       }
       break;
 
     default:
-      res.status(404).json({
+      res.status(405).json({
         success: false,
         message: `This url cannot be accessed by ${req.method} method`,
       });
