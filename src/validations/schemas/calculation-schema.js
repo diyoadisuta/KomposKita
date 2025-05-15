@@ -4,6 +4,7 @@ export const calculationSchema = Joi.object({
   details: Joi.array().items(
     Joi.object({
       materialId: Joi.string().label('materialId').required(),
+      itemName: Joi.string().label('itemName').required(),
       weight: Joi.number().precision(10).label('weight').required(),
       calculatedCn: Joi.number().precision(10).label('calculatedCn').required(),
     })
