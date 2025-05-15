@@ -98,9 +98,9 @@ export class TagService {
     await prisma.tag.update({
       where: {
         id: id,
-        data: {
-          ...value,
-        },
+      },
+      data: {
+        ...value,
       },
     });
   }

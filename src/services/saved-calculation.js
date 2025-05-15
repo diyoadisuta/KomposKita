@@ -1,4 +1,4 @@
-// import { calculationSchema } from '@/validations/schemas/calculation-schema';
+import prisma from '@/lib/prisma';
 import { InputValidationError, NotFoundError } from '@/lib/errors';
 import { calculationSchema } from '@/validations/schemas/calculation-schema';
 import { nanoid } from 'nanoid';
@@ -26,6 +26,7 @@ export class SavedCalculationService {
           create: value.details.map((detail) => ({
             id: nanoid(8),
             materialId: detail.materialId,
+            itemName: detail.itemName,
             weight: detail.weight,
             calculatedCn: detail.calculatedCn,
           })),
@@ -33,7 +34,10 @@ export class SavedCalculationService {
       },
     });
 
-    return savedCalculationData;
+    return {
+      id: savedCalculationData.id,
+      createdAt: savedCalculationData.id,
+    };
   }
 
   static async getSavedCalculations(userId) {
@@ -41,8 +45,17 @@ export class SavedCalculationService {
       where: {
         userId: userId,
       },
-      include: {
-        calculationDetails: true,
+      select: {
+        id: true,
+        createdAt: true,
+        calculationDetails: {
+          select: {
+            materialId: true,
+            itemName: true,
+            weight: true,
+            calculatedCn: true,
+          },
+        },
       },
     });
   }
@@ -52,8 +65,17 @@ export class SavedCalculationService {
       where: {
         id: scid,
       },
-      include: {
-        calculationDetails: true,
+      select: {
+        id: true,
+        createdAt: true,
+        calculationDetails: {
+          select: {
+            materialId: true,
+            itemName: true,
+            weight: true,
+            calculatedCn: true,
+          },
+        },
       },
     });
 

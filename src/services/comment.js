@@ -81,9 +81,9 @@ export class CommentService {
   }
 
   static async getCommentReplies({ id, cid }) {
-    const commentRepliesData = await prisma.comment.findUnique({
+    const commentRepliesData = await prisma.comment.findMany({
       where: {
-        id: cid,
+        parentId: cid,
         postId: id,
       },
       select: {
