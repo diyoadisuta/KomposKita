@@ -1,8 +1,9 @@
+'use client';
+
 import { useState } from 'react';
-import { signIn } from 'better-auth';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 
 export default function SignIn() {
   const router = useRouter();
@@ -13,66 +14,69 @@ export default function SignIn() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      await signIn('credentials', {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
+      const response = await fetch('/api/auth/sign-in/email/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login gagal');
+      }
+
+      // Redirect ke halaman utama setelah login berhasil
       router.push('/');
-    } catch (error) {
-      setError('Email atau password salah');
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <Link href="/" className="flex-shrink-0 flex items-center">
-            <Image
-              src="/images/logo.png"
-              alt="KomposKita Logo"
-              width={400}
-              height={400}
-              className="h-16 w-auto"
-            />
-          </Link>
+          <Image
+            src="/images/logo.png"
+            alt="KomposKita Logo"
+            width={100}
+            height={100}
+            className="rounded-full"
+          />
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Masuk ke akun Anda
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Atau{' '}
-          <Link href="/auth/signup" className="font-medium text-green-600 hover:text-green-500">
-            daftar akun baru
-          </Link>
-        </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {error && (
+            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+              {error}
+            </div>
+          )}
+
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded relative" role="alert">
-                <span className="block sm:inline">{error}</span>
-              </div>
-            )}
-            
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email
@@ -109,26 +113,6 @@ export default function SignIn() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Ingat saya
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <a href="#" className="font-medium text-green-600 hover:text-green-500">
-                  Lupa password?
-                </a>
-              </div>
-            </div>
-
             <div>
               <button
                 type="submit"
@@ -139,6 +123,19 @@ export default function SignIn() {
               </button>
             </div>
           </form>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Belum punya akun?{' '}
+                  <Link href="/auth/signup" className="font-medium text-green-600 hover:text-green-500">
+                    Daftar di sini
+                  </Link>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
