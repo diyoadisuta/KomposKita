@@ -11,3 +11,6 @@ Dengan latar belakang tersebut, kami bertujuan mengembangkan sebuah aplikasi unt
 |  Dewi Puspita  |  MC834D5X1362  |  Machine Learning |
 |    Mochammad Syafiq Ilallah     |  MC006D5Y2189  |      Machine Learning     |
 |    Muhammad Fauzani Akbar      |  MC528D5Y0070  |      Machine Learning    |
+
+## Klasifikasi Bahan Sampah Menggunakan Model MobileNetV2
+
