@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { auth } from '@/lib/auth';
 
 const categories = [
   { id: 1, name: 'Sisa kulit buah/buah segar' },
@@ -14,8 +15,28 @@ const categories = [
   { id: 8, name: 'Ranting/serbuk kayu' },
 ];
 
-export default function Rekomendasi() {
-  const [wasteItems, setWasteItems] = useState([{ name: '', category: '', weight: '' }]);
+export const getServerSideProps = async ({ req }) => {
+  const session = await auth.api.getSession({
+    headers: await req.headers,
+  });
+
+  return {
+    props: {
+      session: session
+        ? {
+            id: session.user.id,
+            name: session.user.name,
+            image: session.user.image,
+          }
+        : null,
+    },
+  };
+};
+
+export default function Rekomendasi({ session }) {
+  const [wasteItems, setWasteItems] = useState([
+    { name: '', category: '', weight: '' },
+  ]);
   const [photo, setPhoto] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [recommendations, setRecommendations] = useState(null);
@@ -66,7 +87,7 @@ export default function Rekomendasi() {
 
   const stopCamera = () => {
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current.getTracks().forEach((track) => track.stop());
     }
     setShowCamera(false);
   };
@@ -74,14 +95,14 @@ export default function Rekomendasi() {
   const handleCalculate = () => {
     // Mock recommendations for demonstration
     const mockRecommendations = {
-      userInput: wasteItems.map(item => ({
+      userInput: wasteItems.map((item) => ({
         ...item,
-        recommended: Math.random() > 0.5
+        recommended: Math.random() > 0.5,
       })),
-      systemRecommendations: wasteItems.map(item => ({
+      systemRecommendations: wasteItems.map((item) => ({
         ...item,
-        recommendedWeight: (Math.random() * 5).toFixed(1)
-      }))
+        recommendedWeight: (Math.random() * 5).toFixed(1),
+      })),
     };
     setRecommendations(mockRecommendations);
   };
@@ -93,10 +114,12 @@ export default function Rekomendasi() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      
+      <Navbar session={session} />
+
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Rekomendasi Komposting</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          Rekomendasi Komposting
+        </h1>
 
         {/* Photo Upload Section */}
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
@@ -122,7 +145,7 @@ export default function Rekomendasi() {
               className="hidden"
             />
           </div>
-          
+
           {showCamera && (
             <div className="mt-4">
               <video
@@ -166,17 +189,24 @@ export default function Rekomendasi() {
           <h2 className="text-xl font-semibold mb-4">Input Sampah</h2>
           <div className="space-y-4">
             {wasteItems.map((item, index) => (
-              <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div
+                key={index}
+                className="grid grid-cols-1 md:grid-cols-3 gap-4"
+              >
                 <input
                   type="text"
                   placeholder="Nama sampah"
                   value={item.name}
-                  onChange={(e) => handleInputChange(index, 'name', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(index, 'name', e.target.value)
+                  }
                   className="border rounded-md p-2"
                 />
                 <select
                   value={item.category}
-                  onChange={(e) => handleInputChange(index, 'category', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(index, 'category', e.target.value)
+                  }
                   className="border rounded-md p-2"
                 >
                   <option value="">Pilih Kategori</option>
@@ -190,7 +220,9 @@ export default function Rekomendasi() {
                   type="number"
                   placeholder="Berat (kg)"
                   value={item.weight}
-                  onChange={(e) => handleInputChange(index, 'weight', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(index, 'weight', e.target.value)
+                  }
                   className="border rounded-md p-2"
                 />
               </div>
@@ -214,7 +246,8 @@ export default function Rekomendasi() {
 
           <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
             <p className="text-sm text-yellow-800">
-              Catatan: Contoh sampah sisa dapur berupa buah/sayuran/kentang dari sisa makanan (menuju busuk).
+              Catatan: Contoh sampah sisa dapur berupa buah/sayuran/kentang dari
+              sisa makanan (menuju busuk).
             </p>
           </div>
         </div>
@@ -223,14 +256,20 @@ export default function Rekomendasi() {
         {recommendations && (
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Hasil Rekomendasi</h2>
-            
+
             <div className="mb-8">
               <h3 className="text-lg font-medium mb-2">Input Anda</h3>
               <div className="space-y-2">
                 {recommendations.userInput.map((item, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <span>{item.name} - {item.category} ({item.weight} kg)</span>
-                    <span className={item.recommended ? 'text-green-600' : 'text-red-600'}>
+                    <span>
+                      {item.name} - {item.category} ({item.weight} kg)
+                    </span>
+                    <span
+                      className={
+                        item.recommended ? 'text-green-600' : 'text-red-600'
+                      }
+                    >
                       {item.recommended ? '✔️' : '❌'}
                     </span>
                   </div>
@@ -243,7 +282,9 @@ export default function Rekomendasi() {
               <div className="space-y-2">
                 {recommendations.systemRecommendations.map((item, index) => (
                   <div key={index} className="flex items-center space-x-2">
-                    <span>{item.name} - {item.category}</span>
+                    <span>
+                      {item.name} - {item.category}
+                    </span>
                     <span className="text-green-600">
                       Rekomendasi: {item.recommendedWeight} kg
                     </span>
@@ -265,4 +306,4 @@ export default function Rekomendasi() {
       <Footer />
     </div>
   );
-} 
+}
