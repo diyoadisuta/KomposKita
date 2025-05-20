@@ -18,7 +18,7 @@ export const getServerSideProps = async ({ req }) => {
             name: session.user.name,
             image: session.user.image,
           }
-        : null,
+        : {},
     },
   };
 };

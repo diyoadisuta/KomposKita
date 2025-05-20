@@ -122,14 +122,9 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   fullName: 'fullName',
   image: 'image',
-  isSubscribed: 'isSubscribed',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  emailVerified: 'emailVerified',
   role: 'role',
-  banned: 'banned',
-  banReason: 'banReason',
-  banExpires: 'banExpires'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SubscriptionTokenScalarFieldEnum = {
@@ -204,43 +199,6 @@ exports.Prisma.CommentScalarFieldEnum = {
   userId: 'userId'
 };
 
-exports.Prisma.SessionScalarFieldEnum = {
-  id: 'id',
-  expiresAt: 'expiresAt',
-  token: 'token',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  ipAddress: 'ipAddress',
-  userAgent: 'userAgent',
-  userId: 'userId',
-  impersonatedBy: 'impersonatedBy'
-};
-
-exports.Prisma.AccountScalarFieldEnum = {
-  id: 'id',
-  accountId: 'accountId',
-  providerId: 'providerId',
-  userId: 'userId',
-  accessToken: 'accessToken',
-  refreshToken: 'refreshToken',
-  idToken: 'idToken',
-  accessTokenExpiresAt: 'accessTokenExpiresAt',
-  refreshTokenExpiresAt: 'refreshTokenExpiresAt',
-  scope: 'scope',
-  password: 'password',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.VerificationScalarFieldEnum = {
-  id: 'id',
-  identifier: 'identifier',
-  value: 'value',
-  expiresAt: 'expiresAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -255,7 +213,10 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.Role = exports.$Enums.Role = {
+  ADMIN: 'ADMIN',
+  USER: 'USER'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -265,10 +226,7 @@ exports.Prisma.ModelName = {
   Material: 'Material',
   Post: 'Post',
   Tag: 'Tag',
-  Comment: 'Comment',
-  Session: 'Session',
-  Account: 'Account',
-  Verification: 'Verification'
+  Comment: 'Comment'
 };
 
 /**

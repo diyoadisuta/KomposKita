@@ -1,11 +1,21 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { authClient } from '@/lib/auth-client';
+
+// export const getServerSideProps = async () => {
+//   const session = await authClient.getSession();
+//   return {
+//     props: { userData: session.data.user },
+//   };
+// };
 
 const Navbar = ({ session }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
   const isLoggedIn = !!session;
+  console.log(isLoggedIn);
 
   const user = {
     name: 'John Doe',
@@ -75,7 +85,7 @@ const Navbar = ({ session }) => {
                         className="rounded-full"
                       />
                       <span className="text-sm font-medium">
-                        {session.name}
+                        {session.user.name}
                       </span>
                     </button>
 
