@@ -3,19 +3,20 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { authClient } from '@/lib/auth-client';
 
-// export const getServerSideProps = async () => {
-//   const session = await authClient.getSession();
-//   return {
-//     props: { userData: session.data.user },
-//   };
-// };
-
-const Navbar = ({ session }) => {
+const Navbar = ({ initialSession }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [session, setSession] = useState(initialSession);
+
+  useEffect(() => {
+    const getSession = async () => {
+      const sessionData = await authClient.getSession();
+      setSession(sessionData);
+    };
+    getSession();
+  }, []);
 
   const isLoggedIn = !!session;
-  console.log(isLoggedIn);
 
   const user = {
     name: 'John Doe',
@@ -83,7 +84,7 @@ const Navbar = ({ session }) => {
                         width={32}
                         height={32}
                         className="rounded-full"
-                      />                      
+                      />
                       <span className="text-sm font-medium">
                         {session?.user?.name || user.name}
                       </span>

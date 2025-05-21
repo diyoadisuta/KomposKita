@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useRouter } from 'next/router';
-import { auth } from '@/lib/auth';
 
 // Mock data for demonstration
 const initialPosts = [
@@ -47,27 +46,30 @@ const initialPosts = [
   },
 ];
 
-export const getServerSideProps = async ({ req }) => {
-  const session = await auth.api.getSession({
-    headers: await req.headers,
-  });
+export async function getStaticProps() {
+  const responseTags = await fetch(`${process.env.BASE_URL}/api/posts/tags`);
+  const responsePosts = await fetch(`${process.env.BASE_URL}/api/posts`);
+  const tags = await responseTags.json();
+  const posts = await responsePosts.json();
+  console.log(tags.data);
+  return { props: { tags: tags.data, posts: posts.data } };
+}
 
-  return {
-    props: {
-      session: session
-        ? {
-            id: session.user.id,
-            name: session.user.name,
-            image: session.user.image,
-          }
-        : null,
-    },
-  };
-};
+export default function Forum({ tags, posts }) {
+  // async function submitPost(event) {
+  //   event.preventDefault();
 
-export default function Forum({ session }) {
+  //   const formData = new FormData(event.target);
+  //   const response = await fetch('/api/posts', {
+  //     method: 'POST',
+  //     body: formData,
+  //   });
+
+  //   const data = await response.json();
+  //   console.log(data);
+  // }
+
   const router = useRouter();
-  const [posts, setPosts] = useState(initialPosts);
   const [selectedPost, setSelectedPost] = useState(null);
   const [showNewPostForm, setShowNewPostForm] = useState(false);
   const [newPost, setNewPost] = useState({
@@ -154,7 +156,7 @@ export default function Forum({ session }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar session={session} />
+      <Navbar />
 
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
@@ -215,30 +217,25 @@ export default function Forum({ session }) {
                   Tag
                 </label>
                 <div className="mt-2 space-x-4">
-                  <label className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      value="berbagi"
-                      checked={newPost.tag === 'berbagi'}
-                      onChange={(e) =>
-                        setNewPost({ ...newPost, tag: e.target.value })
-                      }
-                      className="form-radio text-green-600"
-                    />
-                    <span className="ml-2">Berbagi</span>
-                  </label>
-                  <label className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      value="bertanya"
-                      checked={newPost.tag === 'bertanya'}
-                      onChange={(e) =>
-                        setNewPost({ ...newPost, tag: e.target.value })
-                      }
-                      className="form-radio text-green-600"
-                    />
-                    <span className="ml-2">Bertanya</span>
-                  </label>
+                  {tags.map((tag) => {
+                    return (
+                      <label
+                        className="inline-flex items-center text-black"
+                        key={tag.id}
+                      >
+                        <input
+                          type="radio"
+                          value={tag.name}
+                          checked={newPost.tag === tag.name}
+                          onChange={(e) =>
+                            setNewPost({ ...newPost, tag: e.target.value })
+                          }
+                          className="form-radio text-green-600"
+                        />
+                        <span className="ml-2">{tag.name}</span>
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
               <div className="flex justify-end space-x-4">

@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { auth } from '@/lib/auth';
 
 const categories = [
   { id: 1, name: 'Sisa kulit buah/buah segar' },
@@ -14,24 +13,6 @@ const categories = [
   { id: 7, name: 'Sisa sayur kaya pati (kentang)' },
   { id: 8, name: 'Ranting/serbuk kayu' },
 ];
-
-export const getServerSideProps = async ({ req }) => {
-  const session = await auth.api.getSession({
-    headers: await req.headers,
-  });
-
-  return {
-    props: {
-      session: session
-        ? {
-            id: session.user.id,
-            name: session.user.name,
-            image: session.user.image,
-          }
-        : null,
-    },
-  };
-};
 
 export default function Rekomendasi({ session }) {
   const [wasteItems, setWasteItems] = useState([
