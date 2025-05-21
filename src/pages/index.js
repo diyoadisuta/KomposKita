@@ -3,25 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { auth } from '@/lib/auth';
-
-export const getServerSideProps = async ({ req }) => {
-  const session = await auth.api.getSession({
-    headers: await req.headers,
-  });
-
-  return {
-    props: {
-      session: session
-        ? {
-            id: session.user.id,
-            name: session.user.name,
-            image: session.user.image,
-          }
-        : {},
-    },
-  };
-};
 
 export default function Home({ session }) {
   return (
@@ -35,7 +16,7 @@ export default function Home({ session }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar session={session} />
+      <Navbar initialSession={session} />
 
       <main>
         {/* Banner Utama - Rekomendasi Kompos */}
