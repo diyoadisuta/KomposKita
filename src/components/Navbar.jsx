@@ -19,7 +19,7 @@ const Navbar = ({ session }) => {
 
   const user = {
     name: 'John Doe',
-    image: '/images/default-avatar.png',
+    image: '/images/default-avatar.jpg',
   };
 
   const toggleMenu = () => {
@@ -83,9 +83,9 @@ const Navbar = ({ session }) => {
                         width={32}
                         height={32}
                         className="rounded-full"
-                      />
+                      />                      
                       <span className="text-sm font-medium">
-                        {session.user.name}
+                        {session?.user?.name || user.name}
                       </span>
                     </button>
 
