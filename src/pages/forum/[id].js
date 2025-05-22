@@ -1,3 +1,6 @@
+import { CommentCard } from '@/components/CommentCard';
+import { CommentInput } from '@/components/CommentInput';
+
 export async function getStaticPaths() {
   const responsePosts = await fetch(`${process.env.BASE_URL}/api/posts`);
   const posts = await responsePosts.json();
@@ -23,11 +26,11 @@ export async function getStaticProps({ params }) {
   return { props: { post: post.data, comments: comments.data } };
 }
 
-export default function PostPage({ post }) {
+export default function PostPage({ post, comments }) {
   return (
     <div className="container md:mx-auto flex justify-center p-6">
       <div className="flex-col">
-        <div className="card card-sm min-w-3xl sm:max-w-sm rounded-none">
+        <div className="card card-sm min-w-3xl sm:max-w-sm rounded-none p-2">
           <div className="card-header">
             <h5 className="card-title">{post.title}</h5>
             <p className="text-base">
@@ -35,17 +38,24 @@ export default function PostPage({ post }) {
               {post.author}
             </p>
           </div>
-          <div className="card-body min-h-[250px]">
+          <div className="card-body min-h-[200px]">
             <p>{post.description}</p>
           </div>
         </div>
-        <div className="card card-sm min-w-3xl sm:max-w-sm rounded-none">
+        <div className="card card-sm min-w-3xl sm:max-w-sm rounded-none p-2">
           <div className="card-header">
             <h5 className="card-title border-b-2">Komentar</h5>
           </div>
           <div className="card-body min-h-[200px]">
-            {/* TODO: COMMENT */}
-            <p>{post.description}</p>
+            <CommentInput postId={post.id}/>
+            {comments.map((comment) => (
+              <CommentCard
+                key={comment.id}
+                author={comment.author}
+                message={comment.message}
+                createdAt={comment.createdAt}
+              />
+            ))}
           </div>
         </div>
       </div>

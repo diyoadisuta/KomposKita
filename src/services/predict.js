@@ -32,7 +32,6 @@ export class PredictService {
       .sub(tf.scalar(1.0))
       .expandDims();
 
-      console.log(tensor)
     const predict = await this.model.predict(tensor);
     const score = await predict.data();
     const confidenceScore = Math.max(...score);

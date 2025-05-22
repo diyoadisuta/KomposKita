@@ -33,7 +33,7 @@ export default async function handler(req, res) {
         .status(200)
         .json({
           success: true,
-          message: 'Prediction Successfully',
+          message: 'Prediction successfully',
           result: result,
         });
     } catch (error) {
