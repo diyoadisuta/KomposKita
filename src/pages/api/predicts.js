@@ -23,13 +23,19 @@ export default async function handler(req, res) {
       const { fields, files } = await formData;
 
       const file = files.image;
-      console.log(file)
+      console.log(file[0].filepath);
 
       const predictService = new PredictService();
       const result = await predictService.predictImage(file);
       console.log(result);
 
-      res.status(200).json(result);
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: 'Prediction Successfully',
+          result: result,
+        });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Prediction failed' });

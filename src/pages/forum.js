@@ -4,28 +4,29 @@ import Footer from '../components/Footer';
 import { useRouter } from 'next/router';
 
 export async function getServerSideProps() {
-  try {    const responseTags = await fetch(`${process.env.BASE_URL}/api/posts/tags`);
+  try {
+    const responseTags = await fetch(`${process.env.BASE_URL}/api/posts/tags`);
     const responsePosts = await fetch(`${process.env.BASE_URL}/api/posts`);
-    
+
     const [tags, posts] = await Promise.all([
       responseTags.json(),
-      responsePosts.json()
+      responsePosts.json(),
     ]);
 
     return {
       props: {
         tags: tags.data || [],
         posts: posts.data || [],
-        error: null
-      }
+        error: null,
+      },
     };
   } catch (error) {
     return {
       props: {
         tags: [],
         posts: [],
-        error: "Failed to fetch data"
-      }
+        error: 'Failed to fetch data',
+      },
     };
   }
 }
@@ -40,67 +41,71 @@ export default function Forum({ tags = [], posts: initialPosts = [] }) {
     title: '',
     description: '',
     tag: tags.length > 0 ? tags[0].id : '',
-  });  const [newComment, setNewComment] = useState('');
+  });
+  const [newComment, setNewComment] = useState('');
   const handleNewPostSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    // Validate required fields
-    if (!newPost.title.trim() || !newPost.description.trim() || !newPost.tag) {
-      alert('Please fill in all required fields');
-      return;
-    }
-
-    const postData = {
-      title: newPost.title.trim(),
-      description: newPost.description.trim(),
-      tagId: newPost.tag // Changed from tag to tagId
-    };
-
-    console.log('Sending post data:', postData); // Debug log
-
-    const response = await fetch('/api/posts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify(postData)
-    });
-
-    // Check if response is not ok before trying to parse JSON
-    if (!response.ok) {
-      if (response.status === 401) {
-        router.push('/auth/signin');
+    e.preventDefault();
+    try {
+      // Validate required fields
+      if (
+        !newPost.title.trim() ||
+        !newPost.description.trim() ||
+        !newPost.tag
+      ) {
+        alert('Please fill in all required fields');
         return;
       }
-      const errorData = await response.json().catch(() => ({
-        message: 'Server error occurred'
-      }));
-      throw new Error(errorData.message || 'Failed to create post');
+
+      const postData = {
+        title: newPost.title.trim(),
+        description: newPost.description.trim(),
+        tagId: newPost.tag, // Changed from tag to tagId
+      };
+
+      console.log('Sending post data:', postData); // Debug log
+
+      const response = await fetch('/api/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(postData),
+      });
+
+      // Check if response is not ok before trying to parse JSON
+      if (!response.ok) {
+        if (response.status === 401) {
+          router.push('/auth/signin');
+          return;
+        }
+        const errorData = await response.json().catch(() => ({
+          message: 'Server error occurred',
+        }));
+        throw new Error(errorData.message || 'Failed to create post');
+      }
+
+      const result = await response.json();
+
+      // Add the new post to the posts list with the returned data
+      const newPostWithData = {
+        ...result.data,
+        author: 'You',
+        comments: [],
+      };
+
+      setPosts([newPostWithData, ...posts]);
+      setShowNewPostForm(false);
+      setNewPost({
+        title: '',
+        description: '',
+        tag: tags.length > 0 ? tags[0].id : '', // Changed to use tag ID
+      });
+    } catch (error) {
+      console.error('Error creating post:', error);
+      alert(error.message || 'Failed to create post. Please try again.');
     }
-
-    const result = await response.json();
-
-    // Add the new post to the posts list with the returned data
-    const newPostWithData = {
-      ...result.data,
-      author: 'You',
-      comments: []
-    };
-
-    setPosts([newPostWithData, ...posts]);
-    setShowNewPostForm(false);
-    setNewPost({ 
-      title: '', 
-      description: '', 
-      tag: tags.length > 0 ? tags[0].id : '' // Changed to use tag ID
-    });
-
-  } catch (error) {
-    console.error('Error creating post:', error);
-    alert(error.message || 'Failed to create post. Please try again.');
-  }
-};
+  };
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
@@ -110,11 +115,11 @@ export default function Forum({ tags = [], posts: initialPosts = [] }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({
-          message: newComment.trim()
-        })
+          message: newComment.trim(),
+        }),
       });
 
       if (!response.ok) {
@@ -126,11 +131,11 @@ export default function Forum({ tags = [], posts: initialPosts = [] }) {
       }
 
       const result = await response.json();
-      
+
       // Update the post with new comment
       const updatedPost = {
         ...selectedPost,
-        comments: [...selectedPost.comments, result.data]
+        comments: [...selectedPost.comments, result.data],
       };
 
       setPosts(posts.map((p) => (p.id === selectedPost.id ? updatedPost : p)));
@@ -165,15 +170,18 @@ export default function Forum({ tags = [], posts: initialPosts = [] }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
-
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Forum Komposting</h1>          <button
+          <h1 className="text-3xl font-bold text-gray-900">Forum Komposting</h1>{' '}
+          <button
             onClick={() => {
               setShowNewPostForm(true);
               setIsEditing(false);
-              setNewPost({ title: '', description: '', tag: tags.length > 0 ? tags[0].id : '' });
+              setNewPost({
+                title: '',
+                description: '',
+                tag: tags.length > 0 ? tags[0].id : '',
+              });
             }}
             className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
           >
@@ -222,10 +230,13 @@ export default function Forum({ tags = [], posts: initialPosts = [] }) {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Tag
-                </label>                <div className="mt-2">
+                </label>
+                <div className="mt-2">
                   <select
                     value={newPost.tag}
-                    onChange={(e) => setNewPost({ ...newPost, tag: e.target.value })}
+                    onChange={(e) =>
+                      setNewPost({ ...newPost, tag: e.target.value })
+                    }
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
                     required
                   >
@@ -240,10 +251,15 @@ export default function Forum({ tags = [], posts: initialPosts = [] }) {
               </div>
               <div className="flex justify-end space-x-4">
                 <button
-                  type="button"                  onClick={() => {
+                  type="button"
+                  onClick={() => {
                     setShowNewPostForm(false);
                     setIsEditing(false);
-                    setNewPost({ title: '', description: '', tag: tags.length > 0 ? tags[0].id : '' });
+                    setNewPost({
+                      title: '',
+                      description: '',
+                      tag: tags.length > 0 ? tags[0].id : '',
+                    });
                   }}
                   className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
                 >
@@ -286,7 +302,9 @@ export default function Forum({ tags = [], posts: initialPosts = [] }) {
                   {post.tag}
                 </span>
               </div>
-              <p className="mt-2 text-gray-700 line-clamp-2">{post.description}</p>
+              <p className="mt-2 text-gray-700 line-clamp-2">
+                {post.description}
+              </p>
             </div>
           ))}
         </div>
@@ -317,8 +335,8 @@ export default function Forum({ tags = [], posts: initialPosts = [] }) {
                   </span>
                 </div>
                 <p className="mt-4 text-gray-700">{selectedPost.content}</p>
-
-                {/* Comments Section */}                <div className="mt-8">
+                {/* Comments Section */}{' '}
+                <div className="mt-8">
                   <h3 className="text-lg font-semibold mb-4">Komentar</h3>
                   <div className="space-y-4">
                     {selectedPost?.comments?.map((comment) => (
@@ -359,7 +377,6 @@ export default function Forum({ tags = [], posts: initialPosts = [] }) {
                     </div>
                   </form>
                 </div>
-
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={() => setSelectedPost(null)}
@@ -373,8 +390,6 @@ export default function Forum({ tags = [], posts: initialPosts = [] }) {
           </div>
         )}
       </main>
-
-      <Footer />
     </div>
   );
 }
