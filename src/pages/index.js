@@ -16,8 +16,6 @@ export default function Home({ session }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar initialSession={session} />
-
       <main>
         {/* Banner Utama - Rekomendasi Kompos */}
         <section className="relative bg-amber-800 text-white py-20">
@@ -86,8 +84,6 @@ export default function Home({ session }) {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }

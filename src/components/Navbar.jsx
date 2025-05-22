@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { authClient } from '@/lib/auth-client';
 
-const Navbar = ({ initialSession }) => {
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [session, setSession] = useState(initialSession);
+  const [userData, setUserData] = useState(null)
 
   useEffect(() => {
-    const getSession = async () => {
-      const sessionData = await authClient.getSession();
-      setSession(sessionData);
+    const getUser = async () => {
+      const responseUserData = await fetch('/api/users/me');
+      const user = await responseUserData.json()
+      setUserData(user.data)
     };
-    getSession();
+    getUser();
   }, []);
 
-  const isLoggedIn = !!session;
+  const isLoggedIn = !!userData;
 
   const user = {
     name: 'John Doe',
@@ -31,7 +31,8 @@ const Navbar = ({ initialSession }) => {
     setIsProfileOpen(!isProfileOpen);
   };
 
-  return (    <nav className="bg-white shadow-lg relative top-0 left-0 right-0 z-50">
+  return (
+    <nav className="bg-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 p-2 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -49,7 +50,7 @@ const Navbar = ({ initialSession }) => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
+            <div className="ml-10 flex space-x-4 items-center">
               <Link
                 href="/rekomendasi"
                 className="text-gray-700 hover:text-amber-800 px-3 py-2 rounded-md text-base font-semibold"
@@ -57,7 +58,7 @@ const Navbar = ({ initialSession }) => {
                 Rekomendasi Komposting
               </Link>
               <Link
-                href="/forum"
+                href="/forumfix"
                 className="text-gray-700 hover:text-amber-800 px-3 py-2 rounded-md text-base font-semibold"
               >
                 Forum
@@ -72,14 +73,14 @@ const Navbar = ({ initialSession }) => {
                       className="flex items-center space-x-2 text-gray-700 hover:text-amber-800 focus:outline-none"
                     >
                       <Image
-                        src={user.image}
+                        src={userData.image || user.image}
                         alt="Profile"
                         width={32}
                         height={32}
                         className="rounded-full"
                       />
-                      <span className="text-sm font-medium">
-                        {session?.user?.name || user.name}
+                      <span className="text-base font-medium">
+                        {userData.fullName || user.image}
                       </span>
                     </button>
 
@@ -94,10 +95,10 @@ const Navbar = ({ initialSession }) => {
                             Edit Profile
                           </Link>
                           <Link
-                          href="/rekomendasi-tersimpan"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            href="/rekomendasi-tersimpan"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           >
-                          Rekomendasi Tersimpan
+                            Rekomendasi Tersimpan
                           </Link>
                           <Link
                             href="/notifications"
