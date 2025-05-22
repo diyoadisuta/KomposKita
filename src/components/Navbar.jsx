@@ -31,8 +31,7 @@ const Navbar = ({ initialSession }) => {
     setIsProfileOpen(!isProfileOpen);
   };
 
-  return (
-    <nav className="bg-white shadow-lg">
+  return (    <nav className="bg-white shadow-lg relative top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-6 p-2 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -66,12 +65,6 @@ const Navbar = ({ initialSession }) => {
 
               {isLoggedIn ? (
                 <>
-                  <Link
-                    href="/rekomendasi-tersimpan"
-                    className="text-gray-700 hover:text-amber-800 px-3 py-2 rounded-md text-base font-semibold"
-                  >
-                    Rekomendasi Tersimpan
-                  </Link>
                   {/* Profile Dropdown */}
                   <div className="relative ml-3">
                     <button
@@ -99,6 +92,12 @@ const Navbar = ({ initialSession }) => {
                             role="menuitem"
                           >
                             Edit Profile
+                          </Link>
+                          <Link
+                          href="/rekomendasi-tersimpan"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          >
+                          Rekomendasi Tersimpan
                           </Link>
                           <Link
                             href="/notifications"
