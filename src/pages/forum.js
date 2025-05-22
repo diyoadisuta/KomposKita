@@ -3,155 +3,164 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { useRouter } from 'next/router';
 
-// Mock data for demonstration
-const initialPosts = [
-  {
-    id: 1,
-    title: 'Tips Komposting di Rumah',
-    author: 'Budi Santoso',
-    tag: 'berbagi',
-    date: '2024-03-15',
-    content: 'Berikut beberapa tips untuk memulai komposting di rumah...',
-    comments: [
-      {
-        id: 1,
-        author: 'Ani Wijaya',
-        content: 'Terima kasih tipsnya!',
-        date: '2024-03-15',
-      },
-      {
-        id: 2,
-        author: 'Dewi Putri',
-        content: 'Sangat membantu!',
-        date: '2024-03-16',
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: 'Mengapa Kompos Saya Berbau?',
-    author: 'Siti Aminah',
-    tag: 'bertanya',
-    date: '2024-03-14',
-    content:
-      'Saya sudah mencoba membuat kompos tapi hasilnya berbau tidak sedap...',
-    comments: [
-      {
-        id: 1,
-        author: 'Rudi Hartono',
-        content: 'Mungkin terlalu banyak bahan basah',
-        date: '2024-03-14',
-      },
-    ],
-  },
-];
+export async function getServerSideProps() {
+  try {    const responseTags = await fetch(`${process.env.BASE_URL}/api/posts/tags`);
+    const responsePosts = await fetch(`${process.env.BASE_URL}/api/posts`);
+    
+    const [tags, posts] = await Promise.all([
+      responseTags.json(),
+      responsePosts.json()
+    ]);
 
-export async function getStaticProps() {
-  const responseTags = await fetch(`${process.env.BASE_URL}/api/posts/tags`);
-  const responsePosts = await fetch(`${process.env.BASE_URL}/api/posts`);
-  const tags = await responseTags.json();
-  const posts = await responsePosts.json();
-  console.log(tags.data);
-  return { props: { tags: tags.data, posts: posts.data } };
+    return {
+      props: {
+        tags: tags.data || [],
+        posts: posts.data || [],
+        error: null
+      }
+    };
+  } catch (error) {
+    return {
+      props: {
+        tags: [],
+        posts: [],
+        error: "Failed to fetch data"
+      }
+    };
+  }
 }
 
-export default function Forum({ tags, posts }) {
-  // async function submitPost(event) {
-  //   event.preventDefault();
-
-  //   const formData = new FormData(event.target);
-  //   const response = await fetch('/api/posts', {
-  //     method: 'POST',
-  //     body: formData,
-  //   });
-
-  //   const data = await response.json();
-  //   console.log(data);
-  // }
-
+export default function Forum({ tags = [], posts: initialPosts = [] }) {
   const router = useRouter();
+  const [posts, setPosts] = useState(initialPosts);
   const [selectedPost, setSelectedPost] = useState(null);
   const [showNewPostForm, setShowNewPostForm] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [newPost, setNewPost] = useState({
     title: '',
-    content: '',
-    tag: 'berbagi',
-  });
-  const [newComment, setNewComment] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingPost, setEditingPost] = useState(null);
+    description: '',
+    tag: tags.length > 0 ? tags[0].id : '',
+  });  const [newComment, setNewComment] = useState('');
+  const handleNewPostSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    // Validate required fields
+    if (!newPost.title.trim() || !newPost.description.trim() || !newPost.tag) {
+      alert('Please fill in all required fields');
+      return;
+    }
 
-  const handlePostClick = (post) => {
-    setSelectedPost(post);
-  };
-
-  const handleNewPostSubmit = (e) => {
-    e.preventDefault();
-    const post = {
-      id: posts.length + 1,
-      ...newPost,
-      author: 'Current User', // Replace with actual user
-      date: new Date().toISOString().split('T')[0],
-      comments: [],
+    const postData = {
+      title: newPost.title.trim(),
+      description: newPost.description.trim(),
+      tagId: newPost.tag // Changed from tag to tagId
     };
-    setPosts([post, ...posts]);
-    setShowNewPostForm(false);
-    setNewPost({ title: '', content: '', tag: 'berbagi' });
-  };
 
-  const handleCommentSubmit = (e) => {
+    console.log('Sending post data:', postData); // Debug log
+
+    const response = await fetch('/api/posts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify(postData)
+    });
+
+    // Check if response is not ok before trying to parse JSON
+    if (!response.ok) {
+      if (response.status === 401) {
+        router.push('/auth/signin');
+        return;
+      }
+      const errorData = await response.json().catch(() => ({
+        message: 'Server error occurred'
+      }));
+      throw new Error(errorData.message || 'Failed to create post');
+    }
+
+    const result = await response.json();
+
+    // Add the new post to the posts list with the returned data
+    const newPostWithData = {
+      ...result.data,
+      author: 'You',
+      comments: []
+    };
+
+    setPosts([newPostWithData, ...posts]);
+    setShowNewPostForm(false);
+    setNewPost({ 
+      title: '', 
+      description: '', 
+      tag: tags.length > 0 ? tags[0].id : '' // Changed to use tag ID
+    });
+
+  } catch (error) {
+    console.error('Error creating post:', error);
+    alert(error.message || 'Failed to create post. Please try again.');
+  }
+};
+  const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
 
-    const comment = {
-      id: selectedPost.comments.length + 1,
-      author: 'Current User', // Replace with actual user
-      content: newComment,
-      date: new Date().toISOString().split('T')[0],
-    };
+    try {
+      const response = await fetch(`/api/posts/${selectedPost.id}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          message: newComment.trim()
+        })
+      });
 
-    const updatedPost = {
-      ...selectedPost,
-      comments: [...selectedPost.comments, comment],
-    };
-
-    setPosts(posts.map((p) => (p.id === selectedPost.id ? updatedPost : p)));
-    setSelectedPost(updatedPost);
-    setNewComment('');
-  };
-
-  const handleEditPost = (post) => {
-    setIsEditing(true);
-    setEditingPost(post);
-    setNewPost({ title: post.title, content: post.content, tag: post.tag });
-    setShowNewPostForm(true);
-  };
-
-  const handleDeletePost = (postId) => {
-    if (window.confirm('Apakah Anda yakin ingin menghapus post ini?')) {
-      setPosts(posts.filter((p) => p.id !== postId));
-      if (selectedPost?.id === postId) {
-        setSelectedPost(null);
+      if (!response.ok) {
+        if (response.status === 401) {
+          router.push('/auth/signin');
+          return;
+        }
+        throw new Error('Failed to add comment');
       }
+
+      const result = await response.json();
+      
+      // Update the post with new comment
+      const updatedPost = {
+        ...selectedPost,
+        comments: [...selectedPost.comments, result.data]
+      };
+
+      setPosts(posts.map((p) => (p.id === selectedPost.id ? updatedPost : p)));
+      setSelectedPost(updatedPost);
+      setNewComment('');
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      alert('Failed to add comment. Please try again.');
     }
   };
 
-  const handleEditSubmit = (e) => {
-    e.preventDefault();
-    const updatedPost = {
-      ...editingPost,
-      ...newPost,
-      date: new Date().toISOString().split('T')[0],
-    };
-
-    setPosts(posts.map((p) => (p.id === editingPost.id ? updatedPost : p)));
-    if (selectedPost?.id === editingPost.id) {
-      setSelectedPost(updatedPost);
+  // Function to fetch comments for a post
+  const fetchComments = async (postId) => {
+    try {
+      const response = await fetch(`/api/posts/${postId}/comments`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch comments');
+      }
+      const data = await response.json();
+      return data.data;
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      return [];
     }
-    setIsEditing(false);
-    setEditingPost(null);
-    setShowNewPostForm(false);
-    setNewPost({ title: '', content: '', tag: 'berbagi' });
+  };
+
+  // Update handlePostClick to fetch comments
+  const handlePostClick = async (post) => {
+    const comments = await fetchComments(post.id);
+    setSelectedPost({ ...post, comments });
   };
 
   return (
@@ -160,13 +169,11 @@ export default function Forum({ tags, posts }) {
 
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Forum Komposting</h1>
-          <button
+          <h1 className="text-3xl font-bold text-gray-900">Forum Komposting</h1>          <button
             onClick={() => {
               setShowNewPostForm(true);
               setIsEditing(false);
-              setEditingPost(null);
-              setNewPost({ title: '', content: '', tag: 'berbagi' });
+              setNewPost({ title: '', description: '', tag: tags.length > 0 ? tags[0].id : '' });
             }}
             className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
           >
@@ -177,7 +184,7 @@ export default function Forum({ tags, posts }) {
         {/* New Post Form */}
         {showNewPostForm && (
           <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 className="text-xl font-semibold mb-4">
+            <h2 className="text-xl text-black font-semibold mb-4">
               {isEditing ? 'Edit Post' : 'Buat Post Baru'}
             </h2>
             <form
@@ -203,9 +210,9 @@ export default function Forum({ tags, posts }) {
                   Keterangan
                 </label>
                 <textarea
-                  value={newPost.content}
+                  value={newPost.description}
                   onChange={(e) =>
-                    setNewPost({ ...newPost, content: e.target.value })
+                    setNewPost({ ...newPost, description: e.target.value })
                   }
                   rows="4"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
@@ -215,36 +222,28 @@ export default function Forum({ tags, posts }) {
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Tag
-                </label>
-                <div className="mt-2 space-x-4">
-                  {tags.map((tag) => {
-                    return (
-                      <label
-                        className="inline-flex items-center text-black"
-                        key={tag.id}
-                      >
-                        <input
-                          type="radio"
-                          value={tag.name}
-                          checked={newPost.tag === tag.name}
-                          onChange={(e) =>
-                            setNewPost({ ...newPost, tag: e.target.value })
-                          }
-                          className="form-radio text-green-600"
-                        />
-                        <span className="ml-2">{tag.name}</span>
-                      </label>
-                    );
-                  })}
+                </label>                <div className="mt-2">
+                  <select
+                    value={newPost.tag}
+                    onChange={(e) => setNewPost({ ...newPost, tag: e.target.value })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                    required
+                  >
+                    <option value="">Pilih Tag</option>
+                    {tags.map((tag) => (
+                      <option key={tag.id} value={tag.id}>
+                        {tag.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div className="flex justify-end space-x-4">
                 <button
-                  type="button"
-                  onClick={() => {
+                  type="button"                  onClick={() => {
                     setShowNewPostForm(false);
                     setIsEditing(false);
-                    setEditingPost(null);
+                    setNewPost({ title: '', description: '', tag: tags.length > 0 ? tags[0].id : '' });
                   }}
                   className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
                 >
@@ -287,27 +286,7 @@ export default function Forum({ tags, posts }) {
                   {post.tag}
                 </span>
               </div>
-              <p className="mt-2 text-gray-700 line-clamp-2">{post.content}</p>
-              <div className="mt-4 flex justify-end space-x-2">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEditPost(post);
-                  }}
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeletePost(post.id);
-                  }}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  Hapus
-                </button>
-              </div>
+              <p className="mt-2 text-gray-700 line-clamp-2">{post.description}</p>
             </div>
           ))}
         </div>
@@ -339,26 +318,25 @@ export default function Forum({ tags, posts }) {
                 </div>
                 <p className="mt-4 text-gray-700">{selectedPost.content}</p>
 
-                {/* Comments Section */}
-                <div className="mt-8">
+                {/* Comments Section */}                <div className="mt-8">
                   <h3 className="text-lg font-semibold mb-4">Komentar</h3>
                   <div className="space-y-4">
-                    {selectedPost.comments.map((comment) => (
+                    {selectedPost?.comments?.map((comment) => (
                       <div
                         key={comment.id}
                         className="bg-gray-50 p-4 rounded-lg"
                       >
                         <div className="flex justify-between">
                           <p className="font-medium text-gray-900">
-                            {comment.author}
+                            {comment.authorName}
                           </p>
                           <p className="text-sm text-gray-500">
-                            {comment.date}
+                            {new Date(comment.createdAt).toLocaleDateString()}
                           </p>
                         </div>
-                        <p className="mt-2 text-gray-700">{comment.content}</p>
+                        <p className="mt-2 text-gray-700">{comment.message}</p>
                       </div>
-                    ))}
+                    )) || <p>Belum ada komentar</p>}
                   </div>
 
                   {/* New Comment Form */}
