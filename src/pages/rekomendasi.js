@@ -1,7 +1,5 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 
 const categories = [
   { id: 1, name: 'Sisa kulit buah/buah segar' },
@@ -14,7 +12,7 @@ const categories = [
   { id: 8, name: 'Ranting/serbuk kayu' },
 ];
 
-export default function Rekomendasi({ session }) {
+export default function Rekomendasi() {
   const [wasteItems, setWasteItems] = useState([
     { name: '', category: '', weight: '' },
   ]);

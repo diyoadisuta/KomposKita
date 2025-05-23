@@ -18,11 +18,6 @@ const Navbar = () => {
 
   const isLoggedIn = !!userData;
 
-  const user = {
-    name: 'John Doe',
-    image: '/images/default-avatar.jpg',
-  };
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -58,7 +53,7 @@ const Navbar = () => {
                 Rekomendasi Komposting
               </Link>
               <Link
-                href="/forumfix"
+                href="/forum"
                 className="text-gray-700 hover:text-amber-800 px-3 py-2 rounded-md text-base font-semibold"
               >
                 Forum
@@ -73,7 +68,7 @@ const Navbar = () => {
                       className="flex items-center space-x-2 text-gray-700 hover:text-amber-800 focus:outline-none"
                     >
                       <Image
-                        src={userData.image || user.image}
+                        src={userData.image || '/images/default-avatar.jpg'}
                         alt="Profile"
                         width={32}
                         height={32}

@@ -1,27 +1,18 @@
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 
 export const PostCard = ({ id, title, author, createdAt, tag }) => {
+  const router = useRouter();
   const formattedDate = dayjs(createdAt).format('MMMM D, YYYY HH:mm');
 
   return (
-    <Link href={`/forum/${id}`}>
-      <div
-        className="card card-sm w-full sm:min-w-xl md:min-w-3xl rounded-none"
-        key={id}
-      >
-        <div className="card-header flex-row flex justify-between">
-          <h5 className="card-title">{title}</h5>
-          <p className="text-base">
-            <span className="icon-[line-md--account] size-3"></span>
-            {author}
-          </p>
-        </div>
-        <div className="card-footer flex-row flex justify-between">
-          <p>{formattedDate}</p>
-          <span className="badge badge-info rounded-full">{tag}</span>
-        </div>
-      </div>
-    </Link>
+    <tr className="row-hover" key={id} onClick={() => router.push(`/forum/${id}`)}>
+      <td className="cursor-pointer">{author}</td>
+      <td className="cursor-pointer">{title}</td>
+      <td className="cursor-pointer">{formattedDate}</td>
+      <td className="cursor-pointer">
+        <span className="badge badge-info text-md">{tag}</span>
+      </td>
+    </tr>
   );
 };
