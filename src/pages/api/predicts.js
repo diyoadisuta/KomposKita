@@ -3,14 +3,14 @@ import { PredictService } from '@/services/predict';
 
 export const config = {
   api: {
-    bodyParser: false, // Nonaktifkan bodyParser bawaan Next.js
+    bodyParser: false,
   },
 };
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
-      const form = formidable();
+      const form = formidable({ multiples: true });
       const formData = new Promise((resolve, reject) => {
         form.parse(req, async (err, fields, files) => {
           if (err) {
@@ -29,13 +29,11 @@ export default async function handler(req, res) {
       const result = await predictService.predictImage(file);
       console.log(result);
 
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: 'Prediction successfully',
-          result: result,
-        });
+      res.status(200).json({
+        success: true,
+        message: 'Prediction successfully',
+        result: result,
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Prediction failed' });

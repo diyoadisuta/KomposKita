@@ -1,11 +1,12 @@
 import { CommentCard } from '@/components/CommentCard';
 import { CommentInput } from '@/components/CommentInput';
+import { CommentService } from '@/services/comment';
+import { PostService } from '@/services/post';
 
 export async function getStaticPaths() {
-  const responsePosts = await fetch(`${process.env.BASE_URL}/api/posts`);
-  const posts = await responsePosts.json();
+  const posts = await PostService.getPosts();
 
-  const paths = posts.data.map((post) => ({
+  const paths = posts.map((post) => ({
     params: { id: post.id.toString() },
   }));
 
@@ -13,17 +14,24 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const responsePosts = await fetch(
-    `${process.env.BASE_URL}/api/posts/${params.id}`
-  );
-  const responseComments = await fetch(
-    `${process.env.BASE_URL}/api/posts/${params.id}/comments`
-  );
+  const post = await PostService.getPostById(params.id);
+  const comments = await CommentService.getPostComments(params.id);
 
-  const post = await responsePosts.json();
-  const comments = await responseComments.json();
+  const serializedPost = {
+    ...post,
+    createdAt: post.createdAt.toISOString(),
+    updatedAt: post.updatedAt.toISOString(),
+  };
 
-  return { props: { post: post.data, comments: comments.data } };
+  const serializedComments = comments.map((comment) => ({
+    ...comment,
+    createdAt: comment.createdAt.toISOString(),
+    updatedAt: comment.updatedAt.toISOString(),
+  }));
+
+  return {
+    props: { post: serializedPost ?? [], comments: serializedComments ?? [] },
+  };
 }
 
 export default function PostPage({ post, comments }) {
@@ -47,7 +55,7 @@ export default function PostPage({ post, comments }) {
             <h5 className="card-title border-b-2">Komentar</h5>
           </div>
           <div className="card-body min-h-[200px]">
-            <CommentInput postId={post.id}/>
+            <CommentInput postId={post.id} />
             {comments.map((comment) => (
               <CommentCard
                 key={comment.id}

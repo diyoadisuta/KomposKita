@@ -1,10 +1,8 @@
-'use client';
-
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 async function loadFlyonUI() {
-  return import('flyonui/dist/accordion.js');
+  return import('flyonui/flyonui');
 }
 
 export default function FlyonuiScript() {
@@ -21,10 +19,10 @@ export default function FlyonuiScript() {
   useEffect(() => {
     setTimeout(() => {
       if (
-        window.HSAccordion &&
-        typeof window.HSAccordion.autoInit === 'function'
+        window.HSStaticMethods &&
+        typeof window.HSStaticMethods.autoInit === 'function'
       ) {
-        window.HSAccordion.autoInit();
+        window.HSStaticMethods.autoInit();
       }
     }, 100);
   }, [path]);

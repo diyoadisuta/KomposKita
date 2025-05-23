@@ -1,9 +1,6 @@
-'use client';
-
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function SignIn() {
   const router = useRouter();
@@ -43,7 +40,6 @@ export default function SignIn() {
         throw new Error(data.message || 'Login gagal');
       }
 
-      // Redirect ke halaman utama setelah login berhasil
       router.push('/');
     } catch (err) {
       setError(err.message);
@@ -55,16 +51,7 @@ export default function SignIn() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center">
-          <Image
-            src="/images/logo.png"
-            alt="KomposKita Logo"
-            width={100}
-            height={100}
-            className="rounded-full"
-          />
-        </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="text-center text-3xl font-extrabold text-gray-900">
           Masuk ke akun Anda
         </h2>
       </div>

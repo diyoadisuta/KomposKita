@@ -45,7 +45,6 @@ export class TagService {
       select: {
         id: true,
         name: true,
-        createdAt: true,
       },
     });
   }
