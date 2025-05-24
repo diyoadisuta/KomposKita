@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
+import { imageUrlToBlob } from '@/utils';
+import colors from 'flyonui/utilities/colors';
 
 const categories = [
   { id: 1, name: 'Sisa kulit buah/buah segar' },
@@ -16,12 +18,42 @@ export default function Rekomendasi() {
   const [wasteItems, setWasteItems] = useState([
     { name: '', category: '', weight: '' },
   ]);
-  const [photo, setPhoto] = useState(null);
+
+  const imageInput = useRef(null);
+  const [imageUrl, setImageUrl] = useState('');
+  const [predictionResult, setPredictionResult] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [recommendations, setRecommendations] = useState(null);
-  const fileInputRef = useRef(null);
+
   const videoRef = useRef(null);
   const streamRef = useRef(null);
+
+  async function onPredictionSubmit(event) {
+    event.preventDefault();
+
+    const input = imageInput.current;
+    let file = input.files[0];
+
+    if (!file && imageUrl.startsWith('data:')) {
+      const blob = imageUrlToBlob(imageUrl);
+      file = new File(
+        [blob],
+        `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+        { type: blob.type }
+      );
+    }
+
+    const formData = new FormData();
+    formData.append('image', file, file.name);
+
+    const response = await fetch('/api/predicts', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const responseJson = await response.json();
+    setPredictionResult(responseJson.result.label);
+  }
 
   const handleAddField = () => {
     setWasteItems([...wasteItems, { name: '', category: '', weight: '' }]);
@@ -33,33 +65,38 @@ export default function Rekomendasi() {
     setWasteItems(newItems);
   };
 
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
+  const handleImageUpload = () => {
+    const input = imageInput.current;
+    const file = input.files[0];
+
     if (file) {
-      setPhoto(URL.createObjectURL(file));
+      const url = URL.createObjectURL(file);
+      setImageUrl(url);
     }
+
+    return;
   };
 
   const handleCameraClick = async () => {
     try {
+      setShowCamera(true);
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
-      setShowCamera(true);
     } catch (err) {
       console.error('Error accessing camera:', err);
     }
   };
 
-  const capturePhoto = () => {
+  const captureImage = () => {
     if (videoRef.current) {
       const canvas = document.createElement('canvas');
       canvas.width = videoRef.current.videoWidth;
       canvas.height = videoRef.current.videoHeight;
       canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
-      setPhoto(canvas.toDataURL('image/jpeg'));
+      setImageUrl(canvas.toDataURL('image/jpeg'));
       stopCamera();
     }
   };
@@ -103,25 +140,61 @@ export default function Rekomendasi() {
           <h2 className="text-xl font-semibold mb-4">Upload Foto</h2>
           <div className="flex space-x-4">
             <button
-              onClick={() => fileInputRef.current?.click()}
-              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+              onClick={() => imageInput.current?.click()}
+              className="btn btn-primary rounded-md"
             >
-              Upload Foto
+              Upload foto
             </button>
             <button
               onClick={handleCameraClick}
-              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+              className="btn btn-primary rounded-md"
             >
-              Buka Kamera
+              Buka kamera
             </button>
+          </div>
+
+          {imageUrl && (
+            <div className="mt-4">
+              <Image
+                src={imageUrl}
+                alt="Uploaded waste"
+                width={400}
+                height={300}
+                name="image"
+                className="rounded-lg"
+              />
+            </div>
+          )}
+
+          <form onSubmit={onPredictionSubmit}>
             <input
               type="file"
-              ref={fileInputRef}
-              onChange={handlePhotoUpload}
+              ref={imageInput}
+              onChange={handleImageUpload}
               accept="image/*"
               className="hidden"
             />
-          </div>
+
+            {imageUrl && (
+              <button className="btn btn-outline rounded-md mt-2" type="submit">
+                Dapatkan hasil prediksi
+              </button>
+            )}
+          </form>
+
+          {predictionResult && (
+            <div>
+              <p
+                className={`font-bold ${
+                  predictionResult == 'Sampah Tidak Layak Kompos'
+                    ? 'text-red-500'
+                    : 'text-green-500'
+                }`}
+              >
+                {predictionResult}
+              </p>
+            </div>
+          )}
 
           {showCamera && (
             <div className="mt-4">
@@ -133,7 +206,7 @@ export default function Rekomendasi() {
               />
               <div className="mt-2 flex space-x-2">
                 <button
-                  onClick={capturePhoto}
+                  onClick={captureImage}
                   className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
                 >
                   Ambil Foto
@@ -147,23 +220,13 @@ export default function Rekomendasi() {
               </div>
             </div>
           )}
-
-          {photo && (
-            <div className="mt-4">
-              <Image
-                src={photo}
-                alt="Uploaded waste"
-                width={400}
-                height={300}
-                className="rounded-lg"
-              />
-            </div>
-          )}
         </div>
 
         {/* Input Fields Section */}
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h2 className="text-xl font-semibold mb-4">Input Sampah</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            Masukkan berat sampah yang layak
+          </h2>
           <div className="space-y-4">
             {wasteItems.map((item, index) => (
               <div

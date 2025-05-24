@@ -36,14 +36,15 @@ export class PredictService {
     const score = await predict.data();
     const confidenceScore = Math.max(...score);
     const label = tf.argMax(predict, 1).dataSync()[0];
+
     const resultLabels = [
       'Sampah Organik Basah (LAYAK KOMPOS)',
       'Sampah Organik Kering (LAYAK KOMPOS)',
       'Sampah Tidak Layak Kompos',
     ];
-    const resultLabel = resultLabels[label];
 
-    console.log('Confidence Score:', confidenceScore, 'Label:', resultLabel);
+    console.log(confidenceScore)
+    const resultLabel = resultLabels[label];
     return { label: resultLabel };
   }
 }
