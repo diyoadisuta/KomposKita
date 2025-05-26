@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { imageUrlToBlob } from '@/utils';
-import colors from 'flyonui/utilities/colors';
 
 const categories = [
   { id: 1, name: 'Sisa kulit buah/buah segar' },
