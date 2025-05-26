@@ -1,253 +1,152 @@
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { authClient } from '@/lib/auth-client';
 
-const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [userData, setUserData] = useState(null)
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faUserGear,
+  faPenToSquare,
+  faRightFromBracket,
+} from '@fortawesome/free-solid-svg-icons';
+import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 
-  useEffect(() => {
-    const getUser = async () => {
-      const responseUserData = await fetch('/api/users/me');
-      const user = await responseUserData.json()
-      setUserData(user.data)
-    };
-    getUser();
-  }, []);
+export const Navbar = () => {
+  const router = useRouter();
+  const { user, mutate } = useCurrentUser();
 
-  const isLoggedIn = !!userData;
+  const isLoggedIn = !!user;
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const toggleProfile = () => {
-    setIsProfileOpen(!isProfileOpen);
+  const signOutHandler = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          mutate(null);
+          router.push('/');
+        },
+      },
+    });
   };
 
   return (
-    <nav className="bg-white shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-6 p-2 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center">
+    <nav className="navbar bg-base-100 md:h-18 px-4 md:px-20 sticky top-0 start-0 z-50 shadow-base-300/20 shadow-sm">
+      <div className="w-full md:flex md:items-center md:gap-2">
+        <div className="flex items-center justify-between">
+          <div className="navbar-start items-center justify-between max-md:w-full">
             <Link href="/" className="flex items-center">
               <Image
-                src="/images/logo.png"
+                src="/logo.png"
                 alt="KomposKita Logo"
-                width={200}
-                height={200}
-                className="rounded-full"
+                width={30}
+                height={30}
               />
+              <p className="text-green-700 font-bold text-lg">
+                Kompos
+                <span className="text-yellow-700 font-bold text-lg">Kita</span>
+              </p>
             </Link>
+            <div className="md:hidden">
+              <button
+                type="button"
+                className="collapse-toggle btn btn-outline btn-secondary btn-sm btn-square"
+                data-collapse="#navbar-collapse"
+                aria-controls="navbar-collapse"
+                aria-label="Toggle navigation"
+              >
+                <span className="icon-[tabler--menu-2] collapse-open:hidden size-4"></span>
+                <span className="icon-[tabler--x] collapse-open:block hidden size-4"></span>
+              </button>
+            </div>
           </div>
+        </div>
+        <div
+          id="navbar-collapse"
+          className="md:navbar-end collapse hidden grow basis-full overflow-hidden transition-[height] duration-300 max-md:w-full"
+        >
+          <ul className="menu md:menu-horizontal gap-2 p-0 font-semibold text-base max-md:mt-2 items-center">
+            <li>
+              <Link href="/rekomendasi">Rekomendasi</Link>
+            </li>
+            <li>
+              <Link href="/forum">Forum</Link>
+            </li>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex space-x-4 items-center">
-              <Link
-                href="/rekomendasi"
-                className="text-gray-700 hover:text-amber-800 px-3 py-2 rounded-md text-base font-semibold"
-              >
-                Rekomendasi Komposting
-              </Link>
-              <Link
-                href="/forum"
-                className="text-gray-700 hover:text-amber-800 px-3 py-2 rounded-md text-base font-semibold"
-              >
-                Forum
-              </Link>
-
-              {isLoggedIn ? (
-                <>
-                  {/* Profile Dropdown */}
-                  <div className="relative ml-3">
+            {isLoggedIn ? (
+              <li className="dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]">
+                <button
+                  id="dropdown-link"
+                  type="button"
+                  className="dropdown-toggle dropdown-open:bg-base-content/10 dropdown-open:text-base-content"
+                  aria-haspopup="menu"
+                  aria-expanded="false"
+                  aria-label="Dropdown"
+                >
+                  <Image
+                    src={user.image || '/images/default-avatar.jpg'}
+                    alt="Profile"
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                  {user.fullName}
+                  <span className="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4"></span>
+                </button>
+                <ul
+                  className="dropdown-menu dropdown-open:opacity-100  hidden"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="dropdown-link"
+                >
+                  <li>
+                    <Link href="/users/profile" className="dropdown-item">
+                      <FontAwesomeIcon icon={faUserGear} fixedWidth />
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/#" className="dropdown-item">
+                      <FontAwesomeIcon icon={faBookmark} fixedWidth />
+                      Rekomendasi Tersimpan
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/#" className="dropdown-item">
+                      <FontAwesomeIcon icon={faPenToSquare} fixedWidth />
+                      Post Kamu
+                    </Link>
+                  </li>
+                  <hr className="border-base-content/25 -mx-2" />
+                  <li>
                     <button
-                      onClick={toggleProfile}
-                      className="flex items-center space-x-2 text-gray-700 hover:text-amber-800 focus:outline-none"
+                      onClick={signOutHandler}
+                      className="dropdown-item text-red-500"
                     >
-                      <Image
-                        src={userData.image || '/images/default-avatar.jpg'}
-                        alt="Profile"
-                        width={32}
-                        height={32}
-                        className="rounded-full"
-                      />
-                      <span className="text-base font-medium">
-                        {userData.fullName || user.image}
-                      </span>
+                      <FontAwesomeIcon icon={faRightFromBracket} fixedWidth />
+                      Keluar
                     </button>
+                  </li>
+                </ul>
+              </li>
+            ) : (
+              <>
+                <li>
+                  <Link href="/auth/signin">Masuk</Link>
+                </li>
 
-                    {isProfileOpen && (
-                      <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                        <div className="py-1" role="menu">
-                          <Link
-                            href="/profile/edit"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            role="menuitem"
-                          >
-                            Edit Profile
-                          </Link>
-                          <Link
-                            href="/rekomendasi-tersimpan"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            Rekomendasi Tersimpan
-                          </Link>
-                          <Link
-                            href="/notifications"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            role="menuitem"
-                          >
-                            Langganan Notifikasi
-                          </Link>
-                          <Link
-                            href="/my-posts"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            role="menuitem"
-                          >
-                            Post Kamu
-                          </Link>
-                          <button
-                            onClick={() => {
-                              /* TODO: Implement logout */
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            role="menuitem"
-                          >
-                            Logout
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <div className="flex items-center space-x-4">
+                <li>
                   <Link
-                    href="auth/signin"
-                    className="text-gray-700 hover:text-amber-800 px-3 py-2 rounded-md text-base font-semibold"
-                  >
-                    Masuk
-                  </Link>
-                  <Link
-                    href="auth/signup"
-                    className="bg-amber-800 text-white hover:bg-amber-700 px-4 py-2 rounded-none text-base font-semibold"
+                    href="/auth/signup"
+                    className="bg-amber-800 text-white hover:bg-amber-700 hover:text-white px-4 py-2 rounded-none text-base font-semibold"
                   >
                     Daftar
                   </Link>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-amber-800 focus:outline-none"
-            >
-              <svg
-                className="h-6 w-6"
-                stroke="currentColor"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                {isMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link
-              href="/rekomendasi"
-              className="text-gray-700 hover:text-amber-800 block px-3 py-2 rounded-md text-base font-semibold"
-            >
-              Rekomendasi Komposting
-            </Link>
-            <Link
-              href="/forum"
-              className="text-gray-700 hover:text-amber-800 block px-3 py-2 rounded-md text-base font-semibold"
-            >
-              Forum
-            </Link>
-
-            {isLoggedIn ? (
-              <>
-                <Link
-                  href="/rekomendasi-tersimpan"
-                  className="text-gray-700 hover:text-amber-800 block px-3 py-2 rounded-md text-base font-semibold"
-                >
-                  Rekomendasi Tersimpan
-                </Link>
-                <Link
-                  href="/profile/edit"
-                  className="text-gray-700 hover:text-amber-800 block px-3 py-2 rounded-md text-base font-semibold"
-                >
-                  Edit Profile
-                </Link>
-                <Link
-                  href="/notifications"
-                  className="text-gray-700 hover:text-amber-800 block px-3 py-2 rounded-md text-base font-semibold"
-                >
-                  Langganan Notifikasi
-                </Link>
-                <Link
-                  href="/my-posts"
-                  className="text-gray-700 hover:text-amber-800 block px-3 py-2 rounded-md text-base font-semibold"
-                >
-                  Post Kamu
-                </Link>
-                <button
-                  onClick={() => {
-                    /* TODO: Implement logout */
-                  }}
-                  className="w-full text-left text-gray-700 hover:text-amber-800 block px-3 py-2 rounded-md text-base font-semibold"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="text-gray-700 hover:text-amber-800 block px-3 py-2 rounded-md text-base font-semibold"
-                >
-                  Masuk
-                </Link>
-                <Link
-                  href="/register"
-                  className="bg-amber-800 text-white hover:bg-amber-700 block px-3 py-2 rounded-md text-base font-semibold"
-                >
-                  Daftar
-                </Link>
+                </li>
               </>
             )}
-          </div>
+          </ul>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
-
-export default Navbar;

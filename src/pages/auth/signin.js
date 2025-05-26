@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { mutate } from 'swr';
 
 export default function SignIn() {
   const router = useRouter();
@@ -13,9 +14,9 @@ export default function SignIn() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -33,14 +34,12 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-      console.log(data)
-
       if (!response.ok) {
         throw new Error(data.message || 'Login gagal');
       }
 
-      router.push('/');
+      mutate('/api/users/me');
+      router.push('/home');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -66,7 +65,10 @@ export default function SignIn() {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <div className="mt-1">
@@ -84,7 +86,10 @@ export default function SignIn() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1">
@@ -117,7 +122,10 @@ export default function SignIn() {
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white text-gray-500">
                   Belum punya akun?{' '}
-                  <Link href="/auth/signup" className="font-medium text-green-600 hover:text-green-500">
+                  <Link
+                    href="/auth/signup"
+                    className="font-medium text-green-600 hover:text-green-500"
+                  >
                     Daftar di sini
                   </Link>
                 </span>
@@ -128,4 +136,4 @@ export default function SignIn() {
       </div>
     </div>
   );
-} 
+}
