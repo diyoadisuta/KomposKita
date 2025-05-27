@@ -45,13 +45,14 @@ export default function Rekomendasi() {
     const formData = new FormData();
     formData.append('image', file, file.name);
 
-    const response = await fetch('/api/predicts', {
+    const response = await fetch('https://komposkita-model-production.up.railway.app/predict', {
       method: 'POST',
       body: formData,
     });
 
     const responseJson = await response.json();
-    setPredictionResult(responseJson.result.label);
+    console.log(responseJson)
+    setPredictionResult(responseJson.label);
   }
 
   const handleAddField = () => {
