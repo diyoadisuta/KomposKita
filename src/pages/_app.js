@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }) {
     <>
       <FlyonuiScript />
       <Navbar />
-      <main>
+      <main className='min-h-[70vh]'>
         <Component {...pageProps} />
       </main>
       <Footer />

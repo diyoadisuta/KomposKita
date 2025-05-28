@@ -54,7 +54,7 @@ export const PostInput = ({ tags, onSubmit, isLoggedIn }) => {
                 >
                   Keterangan
                 </label>
-                <input
+                <textarea
                   type="text"
                   className="input rounded-sm min-h-[100px]"
                   id="description"

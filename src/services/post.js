@@ -8,7 +8,7 @@ import { postSchema } from '@/validations/schemas/post-schema';
 import { nanoid } from 'nanoid';
 
 export class PostService {
-  static async createPost({ userId, userName, title, description, tagId }) {
+  static async createPost({ userId, title, description, tagId }) {
     const generatedId = nanoid(8);
     const { error, value } = postSchema.validate({ title, description });
 
@@ -20,7 +20,6 @@ export class PostService {
       data: {
         id: generatedId,
         userId: userId,
-        author: userName,
         ...value,
         tags: {
           connect: {
@@ -40,22 +39,34 @@ export class PostService {
 
   static async getPosts() {
     const postsData = await prisma.post.findMany({
-      where: {
-        deletedAt: null,
-      },
       include: {
         tags: {
           select: {
             name: true,
           },
         },
+        user: {
+          select: {
+            fullName: true,
+          },
+        },
       },
     });
 
     return postsData.map(
-      ({ id, author, title, description, tags, createdAt, updatedAt }) => ({
+      ({
         id,
-        author,
+        userId,
+        title,
+        description,
+        tags,
+        user,
+        createdAt,
+        updatedAt,
+      }) => ({
+        id,
+        userId,
+        author: user.fullName,
         title,
         description,
         tag: tags[0].name,
@@ -72,11 +83,17 @@ export class PostService {
       },
       select: {
         id: true,
-        author: true,
+        userId: true,
         title: true,
         description: true,
         createdAt: true,
         updatedAt: true,
+        deletedAt: true,
+        user: {
+          select: {
+            fullName: true,
+          },
+        },
       },
     });
 
@@ -84,7 +101,16 @@ export class PostService {
       throw new NotFoundError('Post is not found');
     }
 
-    return postData;
+    return {
+      id: postData.id,
+      userId: postData.userId,
+      author: postData.user.fullName,
+      title: postData.title,
+      description: postData.description,
+      createdAt: postData.createdAt,
+      updatedAt: postData.updatedAt,
+      deletedAt: postData.deletedAt,
+    };
   }
 
   static async getUserPosts(userId) {
@@ -114,7 +140,7 @@ export class PostService {
     );
   }
 
-  static async updatePost({ id, sessionUserId, title, description, tagId }) {
+  static async updatePost({ id, sessionUserId, title, description }) {
     const findPost = await prisma.post.findUnique({
       where: {
         id: id,
@@ -138,11 +164,6 @@ export class PostService {
       },
       data: {
         ...value,
-        tags: {
-          connect: {
-            id: tagId,
-          },
-        },
       },
     });
   }
