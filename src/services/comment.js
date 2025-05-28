@@ -8,13 +8,7 @@ import { commentSchema } from '@/validations/schemas/comment-schema';
 import { nanoid } from 'nanoid';
 
 export class CommentService {
-  static async createComment({
-    id,
-    userId,
-    userName,
-    parentId = null,
-    message,
-  }) {
+  static async createComment({ id, userId, parentId = null, message }) {
     const generatedId = nanoid(8);
 
     const findPost = await prisma.post.findUnique({
@@ -37,7 +31,6 @@ export class CommentService {
       data: {
         id: generatedId,
         postId: id,
-        author: userName,
         userId,
         parentId,
         ...value,
@@ -46,7 +39,7 @@ export class CommentService {
 
     return {
       id: commentData.id,
-      author: commentData.author,
+      userId: commentData.userId,
       message: commentData.message,
       createdAt: commentData.createdAt,
     };
@@ -70,14 +63,26 @@ export class CommentService {
       },
       select: {
         id: true,
-        author: true,
         message: true,
         createdAt: true,
         updatedAt: true,
+        user: {
+          select: {
+            fullName: true,
+          },
+        },
       },
     });
 
-    return postCommentsData;
+    return postCommentsData.map(
+      ({ id, user, message, createdAt, updatedAt }) => ({
+        id,
+        author: user.fullName,
+        message,
+        createdAt,
+        updatedAt,
+      })
+    );
   }
 
   static async getCommentReplies({ id, cid }) {
@@ -88,7 +93,6 @@ export class CommentService {
       },
       select: {
         id: true,
-        author: true,
         message: true,
         createdAt: true,
         updatedAt: true,

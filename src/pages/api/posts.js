@@ -21,7 +21,6 @@ export default async function handler(req, res) {
 
         const postData = await PostService.createPost({
           userId: session.user.id,
-          userName: session.user.name,
           title,
           description,
           tagId,

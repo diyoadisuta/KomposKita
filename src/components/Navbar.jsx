@@ -66,7 +66,10 @@ export const Navbar = () => {
         >
           <ul className="menu md:menu-horizontal gap-2 p-0 font-semibold text-base max-md:mt-2 items-center">
             <li>
-              <Link href="/rekomendasi">Rekomendasi</Link>
+              <Link href="/rekomendasi-komposting">Rekomendasi Komposting</Link>
+            </li>
+            <li>
+              <Link href="/informasi">Informasi</Link>
             </li>
             <li>
               <Link href="/forum">Forum</Link>

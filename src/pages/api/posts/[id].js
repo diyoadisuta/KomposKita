@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       break;
 
     case 'PUT':
-      const { title, description, tagId } = req.body;
+      const { title, description } = req.body;
 
       try {
         const session = await auth.api.getSession({
@@ -52,7 +52,6 @@ export default async function handler(req, res) {
           sessionUserId: session.user.id,
           title,
           description,
-          tagId,
         });
 
         res

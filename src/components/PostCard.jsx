@@ -6,7 +6,11 @@ export const PostCard = ({ id, title, author, createdAt, tag }) => {
   const formattedDate = dayjs(createdAt).format('MMMM D, YYYY HH:mm');
 
   return (
-    <tr className="row-hover" key={id} onClick={() => router.push(`/forum/${id}`)}>
+    <tr
+      className="row-hover"
+      key={id}
+      onClick={() => router.push(`/forum/${id}`)}
+    >
       <td className="cursor-pointer">{author}</td>
       <td className="cursor-pointer">{title}</td>
       <td className="cursor-pointer">{formattedDate}</td>
