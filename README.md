@@ -22,12 +22,12 @@ Menurut data dari Sistem Informasi Pengelolaan Sampah Nasional (SIPSN) per tahun
 ## Machine Learning 
 - keras
 - matplotlib
-- Pillow==11.2.1
-- protobuf==6.31.0
-- scikit_learn==1.6.1
-- seaborn==0.13.2
-- tensorflow==2.19.0
-- tensorflowjs==4.22.0
+- Pillow
+- protobuf
+- scikit_learn
+- seaborn
+- tensorflow
+- tensorflowjs
 
 penjelasan
 
