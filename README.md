@@ -20,11 +20,14 @@ Menurut data dari Sistem Informasi Pengelolaan Sampah Nasional (SIPSN) per tahun
 
 # Technologies
 ## Machine Learning 
-- Tensorflow
-- Python
-- Pandas
-- Sklearn
-- Tensorflow Js
+- keras
+- matplotlib
+- Pillow==11.2.1
+- protobuf==6.31.0
+- scikit_learn==1.6.1
+- seaborn==0.13.2
+- tensorflow==2.19.0
+- tensorflowjs==4.22.0
 
 penjelasan
 
