@@ -29,7 +29,28 @@ Menurut data dari Sistem Informasi Pengelolaan Sampah Nasional (SIPSN) per tahun
 - tensorflow
 - tensorflowjs
 
-penjelasan
+**🧠 Machine Learning untuk Klasifikasi Sampah Kompos**
+
+Proyek ini menggunakan **Google Colab** karena keterbatasan spesifikasi laptop/PC. Kami membuat model klasifikasi sampah menjadi tiga kelas utama:
+
+1. **Sampah Organik Basah (Layak Kompos)**
+2. **Sampah Organik Kering (Layak Kompos)**
+3. **Sampah Tidak Layak Kompos**
+
+Dataset berisi **12.464 gambar sampah** dan kami menyimpannya di Google Drive. Data dibagi ke **train/validation/test** dan di-*resize* ke 512x512 piksel.
+
+🧩 Model dikembangkan menggunakan:
+
+* **MobileNetV2 (Transfer Learning)** untuk efisiensi dan akurasi tinggi.
+* **Adam Optimizer** dan **Categorical Crossentropy Loss**.
+* **EarlyStopping**, **ReduceLROnPlateau**, dan **ModelCheckpoint** sebagai *callbacks*.
+* Disimpan model terbaik dalam format `.h5`.
+
+📈 Akurasi pengujian mencapai **>95%**.
+📊 Evaluasi mencakup *confusion matrix* dan *classification report*.
+
+✨ Model juga dapat dipakai langsung untuk memprediksi gambar baru via upload.
+🌐 Terakhir, model dikonversi ke **TensorFlow\.js** agar bisa dijalankan langsung di browser (web-based).
 
 ## Front End
 - Next
