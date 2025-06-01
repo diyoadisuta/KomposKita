@@ -5,7 +5,7 @@ import { MaterialService } from '@/services/material';
 export default async function handler(req, res) {
   switch (req.method) {
     case 'POST':
-      const { name, carbon, nitrogen } = req.body;
+      const { name, carbon, nitrogen, category } = req.body;
 
       try {
         const session = await auth.api.getSession({
@@ -28,6 +28,7 @@ export default async function handler(req, res) {
           name,
           carbon,
           nitrogen,
+          category,
         });
         res.status(201).json({
           success: true,

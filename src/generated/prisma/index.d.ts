@@ -5485,7 +5485,6 @@ export namespace Prisma {
     id: string | null
     savedCalculationId: string | null
     materialId: string | null
-    itemName: string | null
     weight: Decimal | null
     calculatedCn: Decimal | null
     createdAt: Date | null
@@ -5497,7 +5496,6 @@ export namespace Prisma {
     id: string | null
     savedCalculationId: string | null
     materialId: string | null
-    itemName: string | null
     weight: Decimal | null
     calculatedCn: Decimal | null
     createdAt: Date | null
@@ -5509,7 +5507,6 @@ export namespace Prisma {
     id: number
     savedCalculationId: number
     materialId: number
-    itemName: number
     weight: number
     calculatedCn: number
     createdAt: number
@@ -5533,7 +5530,6 @@ export namespace Prisma {
     id?: true
     savedCalculationId?: true
     materialId?: true
-    itemName?: true
     weight?: true
     calculatedCn?: true
     createdAt?: true
@@ -5545,7 +5541,6 @@ export namespace Prisma {
     id?: true
     savedCalculationId?: true
     materialId?: true
-    itemName?: true
     weight?: true
     calculatedCn?: true
     createdAt?: true
@@ -5557,7 +5552,6 @@ export namespace Prisma {
     id?: true
     savedCalculationId?: true
     materialId?: true
-    itemName?: true
     weight?: true
     calculatedCn?: true
     createdAt?: true
@@ -5656,7 +5650,6 @@ export namespace Prisma {
     id: string
     savedCalculationId: string
     materialId: string
-    itemName: string
     weight: Decimal
     calculatedCn: Decimal
     createdAt: Date
@@ -5687,7 +5680,6 @@ export namespace Prisma {
     id?: boolean
     savedCalculationId?: boolean
     materialId?: boolean
-    itemName?: boolean
     weight?: boolean
     calculatedCn?: boolean
     createdAt?: boolean
@@ -5701,7 +5693,6 @@ export namespace Prisma {
     id?: boolean
     savedCalculationId?: boolean
     materialId?: boolean
-    itemName?: boolean
     weight?: boolean
     calculatedCn?: boolean
     createdAt?: boolean
@@ -5715,7 +5706,6 @@ export namespace Prisma {
     id?: boolean
     savedCalculationId?: boolean
     materialId?: boolean
-    itemName?: boolean
     weight?: boolean
     calculatedCn?: boolean
     createdAt?: boolean
@@ -5729,7 +5719,6 @@ export namespace Prisma {
     id?: boolean
     savedCalculationId?: boolean
     materialId?: boolean
-    itemName?: boolean
     weight?: boolean
     calculatedCn?: boolean
     createdAt?: boolean
@@ -5737,7 +5726,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type CalculationDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "savedCalculationId" | "materialId" | "itemName" | "weight" | "calculatedCn" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["calculationDetail"]>
+  export type CalculationDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "savedCalculationId" | "materialId" | "weight" | "calculatedCn" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["calculationDetail"]>
   export type CalculationDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     SavedCalculation?: boolean | SavedCalculationDefaultArgs<ExtArgs>
     material?: boolean | MaterialDefaultArgs<ExtArgs>
@@ -5761,7 +5750,6 @@ export namespace Prisma {
       id: string
       savedCalculationId: string
       materialId: string
-      itemName: string
       weight: Prisma.Decimal
       calculatedCn: Prisma.Decimal
       createdAt: Date
@@ -6195,7 +6183,6 @@ export namespace Prisma {
     readonly id: FieldRef<"CalculationDetail", 'String'>
     readonly savedCalculationId: FieldRef<"CalculationDetail", 'String'>
     readonly materialId: FieldRef<"CalculationDetail", 'String'>
-    readonly itemName: FieldRef<"CalculationDetail", 'String'>
     readonly weight: FieldRef<"CalculationDetail", 'Decimal'>
     readonly calculatedCn: FieldRef<"CalculationDetail", 'Decimal'>
     readonly createdAt: FieldRef<"CalculationDetail", 'DateTime'>
@@ -6642,6 +6629,7 @@ export namespace Prisma {
     name: string | null
     carbon: Decimal | null
     nitrogen: Decimal | null
+    category: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -6652,6 +6640,7 @@ export namespace Prisma {
     name: string | null
     carbon: Decimal | null
     nitrogen: Decimal | null
+    category: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -6662,6 +6651,7 @@ export namespace Prisma {
     name: number
     carbon: number
     nitrogen: number
+    category: number
     createdAt: number
     updatedAt: number
     deletedAt: number
@@ -6684,6 +6674,7 @@ export namespace Prisma {
     name?: true
     carbon?: true
     nitrogen?: true
+    category?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -6694,6 +6685,7 @@ export namespace Prisma {
     name?: true
     carbon?: true
     nitrogen?: true
+    category?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -6704,6 +6696,7 @@ export namespace Prisma {
     name?: true
     carbon?: true
     nitrogen?: true
+    category?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -6801,6 +6794,7 @@ export namespace Prisma {
     name: string
     carbon: Decimal
     nitrogen: Decimal
+    category: string | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -6830,6 +6824,7 @@ export namespace Prisma {
     name?: boolean
     carbon?: boolean
     nitrogen?: boolean
+    category?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -6842,6 +6837,7 @@ export namespace Prisma {
     name?: boolean
     carbon?: boolean
     nitrogen?: boolean
+    category?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -6852,6 +6848,7 @@ export namespace Prisma {
     name?: boolean
     carbon?: boolean
     nitrogen?: boolean
+    category?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -6862,12 +6859,13 @@ export namespace Prisma {
     name?: boolean
     carbon?: boolean
     nitrogen?: boolean
+    category?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
   }
 
-  export type MaterialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "carbon" | "nitrogen" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["material"]>
+  export type MaterialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "carbon" | "nitrogen" | "category" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["material"]>
   export type MaterialInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     calculationDetails?: boolean | Material$calculationDetailsArgs<ExtArgs>
     _count?: boolean | MaterialCountOutputTypeDefaultArgs<ExtArgs>
@@ -6885,6 +6883,7 @@ export namespace Prisma {
       name: string
       carbon: Prisma.Decimal
       nitrogen: Prisma.Decimal
+      category: string | null
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
@@ -7316,6 +7315,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Material", 'String'>
     readonly carbon: FieldRef<"Material", 'Decimal'>
     readonly nitrogen: FieldRef<"Material", 'Decimal'>
+    readonly category: FieldRef<"Material", 'String'>
     readonly createdAt: FieldRef<"Material", 'DateTime'>
     readonly updatedAt: FieldRef<"Material", 'DateTime'>
     readonly deletedAt: FieldRef<"Material", 'DateTime'>
@@ -14407,7 +14407,6 @@ export namespace Prisma {
     id: 'id',
     savedCalculationId: 'savedCalculationId',
     materialId: 'materialId',
-    itemName: 'itemName',
     weight: 'weight',
     calculatedCn: 'calculatedCn',
     createdAt: 'createdAt',
@@ -14423,6 +14422,7 @@ export namespace Prisma {
     name: 'name',
     carbon: 'carbon',
     nitrogen: 'nitrogen',
+    category: 'category',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     deletedAt: 'deletedAt'
@@ -14850,7 +14850,6 @@ export namespace Prisma {
     id?: StringFilter<"CalculationDetail"> | string
     savedCalculationId?: StringFilter<"CalculationDetail"> | string
     materialId?: StringFilter<"CalculationDetail"> | string
-    itemName?: StringFilter<"CalculationDetail"> | string
     weight?: DecimalFilter<"CalculationDetail"> | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFilter<"CalculationDetail"> | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFilter<"CalculationDetail"> | Date | string
@@ -14864,7 +14863,6 @@ export namespace Prisma {
     id?: SortOrder
     savedCalculationId?: SortOrder
     materialId?: SortOrder
-    itemName?: SortOrder
     weight?: SortOrder
     calculatedCn?: SortOrder
     createdAt?: SortOrder
@@ -14881,7 +14879,6 @@ export namespace Prisma {
     NOT?: CalculationDetailWhereInput | CalculationDetailWhereInput[]
     savedCalculationId?: StringFilter<"CalculationDetail"> | string
     materialId?: StringFilter<"CalculationDetail"> | string
-    itemName?: StringFilter<"CalculationDetail"> | string
     weight?: DecimalFilter<"CalculationDetail"> | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFilter<"CalculationDetail"> | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFilter<"CalculationDetail"> | Date | string
@@ -14895,7 +14892,6 @@ export namespace Prisma {
     id?: SortOrder
     savedCalculationId?: SortOrder
     materialId?: SortOrder
-    itemName?: SortOrder
     weight?: SortOrder
     calculatedCn?: SortOrder
     createdAt?: SortOrder
@@ -14915,7 +14911,6 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"CalculationDetail"> | string
     savedCalculationId?: StringWithAggregatesFilter<"CalculationDetail"> | string
     materialId?: StringWithAggregatesFilter<"CalculationDetail"> | string
-    itemName?: StringWithAggregatesFilter<"CalculationDetail"> | string
     weight?: DecimalWithAggregatesFilter<"CalculationDetail"> | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalWithAggregatesFilter<"CalculationDetail"> | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeWithAggregatesFilter<"CalculationDetail"> | Date | string
@@ -14931,6 +14926,7 @@ export namespace Prisma {
     name?: StringFilter<"Material"> | string
     carbon?: DecimalFilter<"Material"> | Decimal | DecimalJsLike | number | string
     nitrogen?: DecimalFilter<"Material"> | Decimal | DecimalJsLike | number | string
+    category?: StringNullableFilter<"Material"> | string | null
     createdAt?: DateTimeFilter<"Material"> | Date | string
     updatedAt?: DateTimeFilter<"Material"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Material"> | Date | string | null
@@ -14942,6 +14938,7 @@ export namespace Prisma {
     name?: SortOrder
     carbon?: SortOrder
     nitrogen?: SortOrder
+    category?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -14956,6 +14953,7 @@ export namespace Prisma {
     NOT?: MaterialWhereInput | MaterialWhereInput[]
     carbon?: DecimalFilter<"Material"> | Decimal | DecimalJsLike | number | string
     nitrogen?: DecimalFilter<"Material"> | Decimal | DecimalJsLike | number | string
+    category?: StringNullableFilter<"Material"> | string | null
     createdAt?: DateTimeFilter<"Material"> | Date | string
     updatedAt?: DateTimeFilter<"Material"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Material"> | Date | string | null
@@ -14967,6 +14965,7 @@ export namespace Prisma {
     name?: SortOrder
     carbon?: SortOrder
     nitrogen?: SortOrder
+    category?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -14985,6 +14984,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Material"> | string
     carbon?: DecimalWithAggregatesFilter<"Material"> | Decimal | DecimalJsLike | number | string
     nitrogen?: DecimalWithAggregatesFilter<"Material"> | Decimal | DecimalJsLike | number | string
+    category?: StringNullableWithAggregatesFilter<"Material"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Material"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Material"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Material"> | Date | string | null
@@ -15682,7 +15682,6 @@ export namespace Prisma {
 
   export type CalculationDetailCreateInput = {
     id: string
-    itemName: string
     weight: Decimal | DecimalJsLike | number | string
     calculatedCn: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
@@ -15696,7 +15695,6 @@ export namespace Prisma {
     id: string
     savedCalculationId: string
     materialId: string
-    itemName: string
     weight: Decimal | DecimalJsLike | number | string
     calculatedCn: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
@@ -15706,7 +15704,6 @@ export namespace Prisma {
 
   export type CalculationDetailUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemName?: StringFieldUpdateOperationsInput | string
     weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15720,7 +15717,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     savedCalculationId?: StringFieldUpdateOperationsInput | string
     materialId?: StringFieldUpdateOperationsInput | string
-    itemName?: StringFieldUpdateOperationsInput | string
     weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15732,7 +15728,6 @@ export namespace Prisma {
     id: string
     savedCalculationId: string
     materialId: string
-    itemName: string
     weight: Decimal | DecimalJsLike | number | string
     calculatedCn: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
@@ -15742,7 +15737,6 @@ export namespace Prisma {
 
   export type CalculationDetailUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemName?: StringFieldUpdateOperationsInput | string
     weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15754,7 +15748,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     savedCalculationId?: StringFieldUpdateOperationsInput | string
     materialId?: StringFieldUpdateOperationsInput | string
-    itemName?: StringFieldUpdateOperationsInput | string
     weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15767,6 +15760,7 @@ export namespace Prisma {
     name: string
     carbon: Decimal | DecimalJsLike | number | string
     nitrogen: Decimal | DecimalJsLike | number | string
+    category?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -15778,6 +15772,7 @@ export namespace Prisma {
     name: string
     carbon: Decimal | DecimalJsLike | number | string
     nitrogen: Decimal | DecimalJsLike | number | string
+    category?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -15789,6 +15784,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     carbon?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     nitrogen?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15800,6 +15796,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     carbon?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     nitrogen?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15811,6 +15808,7 @@ export namespace Prisma {
     name: string
     carbon: Decimal | DecimalJsLike | number | string
     nitrogen: Decimal | DecimalJsLike | number | string
+    category?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -15821,6 +15819,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     carbon?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     nitrogen?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -15831,6 +15830,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     carbon?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     nitrogen?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16649,7 +16649,6 @@ export namespace Prisma {
     id?: SortOrder
     savedCalculationId?: SortOrder
     materialId?: SortOrder
-    itemName?: SortOrder
     weight?: SortOrder
     calculatedCn?: SortOrder
     createdAt?: SortOrder
@@ -16666,7 +16665,6 @@ export namespace Prisma {
     id?: SortOrder
     savedCalculationId?: SortOrder
     materialId?: SortOrder
-    itemName?: SortOrder
     weight?: SortOrder
     calculatedCn?: SortOrder
     createdAt?: SortOrder
@@ -16678,7 +16676,6 @@ export namespace Prisma {
     id?: SortOrder
     savedCalculationId?: SortOrder
     materialId?: SortOrder
-    itemName?: SortOrder
     weight?: SortOrder
     calculatedCn?: SortOrder
     createdAt?: SortOrder
@@ -16712,6 +16709,7 @@ export namespace Prisma {
     name?: SortOrder
     carbon?: SortOrder
     nitrogen?: SortOrder
+    category?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -16727,6 +16725,7 @@ export namespace Prisma {
     name?: SortOrder
     carbon?: SortOrder
     nitrogen?: SortOrder
+    category?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -16737,6 +16736,7 @@ export namespace Prisma {
     name?: SortOrder
     carbon?: SortOrder
     nitrogen?: SortOrder
+    category?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -18260,7 +18260,6 @@ export namespace Prisma {
 
   export type CalculationDetailCreateWithoutSavedCalculationInput = {
     id: string
-    itemName: string
     weight: Decimal | DecimalJsLike | number | string
     calculatedCn: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
@@ -18272,7 +18271,6 @@ export namespace Prisma {
   export type CalculationDetailUncheckedCreateWithoutSavedCalculationInput = {
     id: string
     materialId: string
-    itemName: string
     weight: Decimal | DecimalJsLike | number | string
     calculatedCn: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
@@ -18364,7 +18362,6 @@ export namespace Prisma {
     id?: StringFilter<"CalculationDetail"> | string
     savedCalculationId?: StringFilter<"CalculationDetail"> | string
     materialId?: StringFilter<"CalculationDetail"> | string
-    itemName?: StringFilter<"CalculationDetail"> | string
     weight?: DecimalFilter<"CalculationDetail"> | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFilter<"CalculationDetail"> | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFilter<"CalculationDetail"> | Date | string
@@ -18398,6 +18395,7 @@ export namespace Prisma {
     name: string
     carbon: Decimal | DecimalJsLike | number | string
     nitrogen: Decimal | DecimalJsLike | number | string
+    category?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -18408,6 +18406,7 @@ export namespace Prisma {
     name: string
     carbon: Decimal | DecimalJsLike | number | string
     nitrogen: Decimal | DecimalJsLike | number | string
+    category?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -18461,6 +18460,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     carbon?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     nitrogen?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18471,6 +18471,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     carbon?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     nitrogen?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18478,7 +18479,6 @@ export namespace Prisma {
 
   export type CalculationDetailCreateWithoutMaterialInput = {
     id: string
-    itemName: string
     weight: Decimal | DecimalJsLike | number | string
     calculatedCn: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
@@ -18490,7 +18490,6 @@ export namespace Prisma {
   export type CalculationDetailUncheckedCreateWithoutMaterialInput = {
     id: string
     savedCalculationId: string
-    itemName: string
     weight: Decimal | DecimalJsLike | number | string
     calculatedCn: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
@@ -19322,7 +19321,6 @@ export namespace Prisma {
   export type CalculationDetailCreateManySavedCalculationInput = {
     id: string
     materialId: string
-    itemName: string
     weight: Decimal | DecimalJsLike | number | string
     calculatedCn: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
@@ -19332,7 +19330,6 @@ export namespace Prisma {
 
   export type CalculationDetailUpdateWithoutSavedCalculationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemName?: StringFieldUpdateOperationsInput | string
     weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19344,7 +19341,6 @@ export namespace Prisma {
   export type CalculationDetailUncheckedUpdateWithoutSavedCalculationInput = {
     id?: StringFieldUpdateOperationsInput | string
     materialId?: StringFieldUpdateOperationsInput | string
-    itemName?: StringFieldUpdateOperationsInput | string
     weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19355,7 +19351,6 @@ export namespace Prisma {
   export type CalculationDetailUncheckedUpdateManyWithoutSavedCalculationInput = {
     id?: StringFieldUpdateOperationsInput | string
     materialId?: StringFieldUpdateOperationsInput | string
-    itemName?: StringFieldUpdateOperationsInput | string
     weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19366,7 +19361,6 @@ export namespace Prisma {
   export type CalculationDetailCreateManyMaterialInput = {
     id: string
     savedCalculationId: string
-    itemName: string
     weight: Decimal | DecimalJsLike | number | string
     calculatedCn: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
@@ -19376,7 +19370,6 @@ export namespace Prisma {
 
   export type CalculationDetailUpdateWithoutMaterialInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemName?: StringFieldUpdateOperationsInput | string
     weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19388,7 +19381,6 @@ export namespace Prisma {
   export type CalculationDetailUncheckedUpdateWithoutMaterialInput = {
     id?: StringFieldUpdateOperationsInput | string
     savedCalculationId?: StringFieldUpdateOperationsInput | string
-    itemName?: StringFieldUpdateOperationsInput | string
     weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19399,7 +19391,6 @@ export namespace Prisma {
   export type CalculationDetailUncheckedUpdateManyWithoutMaterialInput = {
     id?: StringFieldUpdateOperationsInput | string
     savedCalculationId?: StringFieldUpdateOperationsInput | string
-    itemName?: StringFieldUpdateOperationsInput | string
     weight?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     calculatedCn?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

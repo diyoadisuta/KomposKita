@@ -50,7 +50,7 @@ export default async function handler(req, res) {
       break;
 
     case 'PUT':
-      const { name, carbon, nitrogen } = req.body;
+      const { name, carbon, nitrogen, category } = req.body;
 
       try {
         const session = await auth.api.getSession({
@@ -75,6 +75,7 @@ export default async function handler(req, res) {
           name,
           carbon,
           nitrogen,
+          category
         });
         res.status(200).json({
           success: true,
@@ -82,12 +83,6 @@ export default async function handler(req, res) {
         });
       } catch (error) {
         console.error('PUTmaterial: error:', error);
-
-        if (error instanceof PrismaCustomError) {
-          return res
-            .status(400)
-            .json({ success: false, message: error.message });
-        }
 
         if (error instanceof NotFoundError) {
           return res

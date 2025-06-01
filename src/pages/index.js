@@ -17,16 +17,17 @@ export default function Home() {
               Ayo Membuat Kompos!
             </h1>
             <p className="text-xl">
-              Semua sisa sampah dapur tidak sepenuhnya tidak bermanfaat, ada
-              beberapa Sampah dapurmu masih dapat didaur ulang dengan komposting
-              yang menghasilkan kompos yang bermanfaat untuk menyuburkan tanah.
+              Ada beberapa Sampah dapurmu masih dapat didaur ulang dengan
+              komposting yang menghasilkan kompos yang bermanfaat untuk
+              menyuburkan tanah. Kelayakan dan berat bahan untuk komposting
+              dapat mempengaruhi kualitas kompos.
             </p>
 
             <Link
-              href="/rekomendasi-komposting"
+              href="/periksa-bahan"
               className=" bg-white text-amber-800 w-fit r-800 px-6 py-2 rounded-full font-semibold hover:bg-amber-700 hover:border-amber-950 hover:text-neutral-50 transition duration-300 mt-4"
             >
-              Dapatkan Rekomendasi
+              Periksa kelayakan sekarang
             </Link>
           </div>
 
@@ -42,7 +43,7 @@ export default function Home() {
       </div>
 
       <div className="mx-auto max-w-[1200px] my-10 p-8">
-        <h2 class="text-base-content text-3xl text-center pb-8 italic">
+        <h2 className="text-base-content text-3xl text-center pb-8 italic">
           Apa itu komposting?
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -67,12 +68,12 @@ export default function Home() {
           </div>
         </div>
 
-        <h2 class="text-base-content text-3xl text-center py-8 italic">
+        <h2 className="text-base-content text-3xl text-center py-8 italic">
           Bagaimana langkah-langkahnya?
         </h2>
         <Timeline />
 
-        <h2 class="text-base-content text-3xl text-center py-8 italic border-t-2 border-gray-100 mt-10"></h2>
+        <h2 className="text-base-content text-3xl text-center py-8 italic border-t-2 border-gray-100 mt-10"></h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Image
             src="/images/community-banner.png"

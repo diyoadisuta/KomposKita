@@ -66,7 +66,7 @@ export const Navbar = () => {
         >
           <ul className="menu md:menu-horizontal gap-2 p-0 font-semibold text-base max-md:mt-2 items-center">
             <li>
-              <Link href="/rekomendasi-komposting">Rekomendasi Komposting</Link>
+              <Link href="/periksa-bahan">Periksa Bahan Komposting</Link>
             </li>
             <li>
               <Link href="/informasi">Informasi</Link>
@@ -108,9 +108,12 @@ export const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/#" className="dropdown-item">
+                    <Link
+                      href="/perhitungan-tersimpan"
+                      className="dropdown-item"
+                    >
                       <FontAwesomeIcon icon={faBookmark} fixedWidth />
-                      Rekomendasi Tersimpan
+                      Perhitungan Tersimpan
                     </Link>
                   </li>
                   <li>

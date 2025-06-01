@@ -155,7 +155,6 @@ exports.Prisma.CalculationDetailScalarFieldEnum = {
   id: 'id',
   savedCalculationId: 'savedCalculationId',
   materialId: 'materialId',
-  itemName: 'itemName',
   weight: 'weight',
   calculatedCn: 'calculatedCn',
   createdAt: 'createdAt',
@@ -168,6 +167,7 @@ exports.Prisma.MaterialScalarFieldEnum = {
   name: 'name',
   carbon: 'carbon',
   nitrogen: 'nitrogen',
+  category: 'category',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
