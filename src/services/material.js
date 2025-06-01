@@ -8,12 +8,13 @@ import {
 } from '@/lib/errors';
 
 export class MaterialService {
-  static async createMaterial({ name, carbon, nitrogen }) {
+  static async createMaterial({ name, carbon, nitrogen, category }) {
     const generatedId = nanoid(8);
     const { error, value } = materialSchema.validate({
       name,
       carbon,
       nitrogen,
+      category,
     });
 
     if (error) {
@@ -43,6 +44,7 @@ export class MaterialService {
       name: materialData.name,
       carbon: materialData.carbon,
       nitrogen: materialData.nitrogen,
+      category: materialData.category,
       createdAt: materialData.createdAt,
     };
   }
@@ -54,7 +56,7 @@ export class MaterialService {
         name: true,
         carbon: true,
         nitrogen: true,
-        createdAt: true,
+        category: true,
       },
     });
   }
@@ -69,7 +71,7 @@ export class MaterialService {
         name: true,
         carbon: true,
         nitrogen: true,
-        createdAt: true,
+        category: true,
       },
     });
 
@@ -80,7 +82,7 @@ export class MaterialService {
     return materialData;
   }
 
-  static async updateMaterial({ id, name, carbon, nitrogen }) {
+  static async updateMaterial({ id, name, carbon, nitrogen, category }) {
     const findMaterial = await prisma.material.findUnique({
       where: {
         id: id,
@@ -95,20 +97,11 @@ export class MaterialService {
       name,
       carbon,
       nitrogen,
+      category,
     });
 
     if (error) {
       throw new InputValidationError(error.details[0].message);
-    }
-
-    const isMaterialExisted = await prisma.material.findUnique({
-      where: {
-        name: name,
-      },
-    });
-
-    if (isMaterialExisted) {
-      throw new PrismaCustomError('Material already existed');
     }
 
     await prisma.material.update({

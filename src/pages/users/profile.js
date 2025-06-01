@@ -54,13 +54,13 @@ export default function Profile() {
     <div>
       <section>
         <div className="sm:mx-auto flex justify-center my-8">
-          <div className="flex flex-col border-2 p-6 rounded-sm border-gray-200 justify-center gap-4">
+          <div className="flex flex-col sm:min-w-md md:min-w-[800px] border-2 p-3 rounded-sm border-gray-200 justify-center gap-4">
             <div>
               <h2 className="text-base-content text-2xl py-4 font-semibold border-b-2 border-gray-300">
                 Profile
               </h2>
             </div>
-            <div className="w-full sm:min-w-md md:min-w-2xl rounded-none">
+            <div className="w-full rounded-none">
               <Image
                 src="/images/default-avatar.jpg"
                 width={150}

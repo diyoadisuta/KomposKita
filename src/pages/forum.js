@@ -50,7 +50,7 @@ export default function Forum({ posts, tags, isLoggedIn }) {
   return (
     <>
       <Head>
-        <title>Informasi seputar komposting</title>
+        <title>Forum - KomposKita</title>
       </Head>
 
       <div className="sm:mx-auto flex justify-center my-8">

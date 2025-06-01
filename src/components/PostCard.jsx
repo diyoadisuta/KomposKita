@@ -12,7 +12,7 @@ export const PostCard = ({ id, title, author, createdAt, tag }) => {
       onClick={() => router.push(`/forum/${id}`)}
     >
       <td className="cursor-pointer">{author}</td>
-      <td className="cursor-pointer">{title}</td>
+      <td className="cursor-pointer break-words">{title}</td>
       <td className="cursor-pointer">{formattedDate}</td>
       <td className="cursor-pointer">
         <span className="badge badge-info text-md">{tag}</span>

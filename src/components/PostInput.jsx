@@ -56,7 +56,7 @@ export const PostInput = ({ tags, onSubmit, isLoggedIn }) => {
                 </label>
                 <textarea
                   type="text"
-                  className="input rounded-sm min-h-[100px]"
+                  className="input w-full rounded-sm min-h-[100px]"
                   id="description"
                   name="description"
                   required

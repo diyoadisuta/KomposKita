@@ -71,7 +71,6 @@ model CalculationDetail {
   savedCalculationId String
   material           Material         @relation(fields: [materialId], references: [id])
   materialId         String
-  itemName           String
   weight             Decimal          @db.Decimal(10, 2)
   calculatedCn       Decimal          @db.Decimal(10, 2)
   createdAt          DateTime         @default(now())
@@ -86,6 +85,7 @@ model Material {
   name               String              @unique
   carbon             Decimal             @db.Decimal(10, 2)
   nitrogen           Decimal             @db.Decimal(10, 2)
+  category           String?
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   deletedAt          DateTime?

@@ -9,7 +9,7 @@ export const UpdateProfile = ({
   return (
     <>
       <form className="mt-4" onSubmit={profileUpdateHandler}>
-        <div className="w-96 flex flex-col gap-2">
+        <div className="max-w-96 flex flex-col gap-2">
           <label className="label-text font-bold" htmlFor="fullname">
             Nama Lengkap<span className="text-red-600"> *</span>
           </label>
@@ -18,7 +18,7 @@ export const UpdateProfile = ({
             name="name"
             value={name}
             onChange={onChangeHandler}
-            className="input rounded-none md:min-w-xl"
+            className="input rounded-none md:max-w-xl"
             id="fullname"
             required
           />
@@ -29,7 +29,7 @@ export const UpdateProfile = ({
           <input
             type="email"
             value={email}
-            className="input rounded-none md:min-w-xl"
+            className="input rounded-none md:max-w-xl"
             id="email"
             disabled
           />

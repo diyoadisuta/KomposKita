@@ -2,6 +2,7 @@ import prisma from '@/lib/prisma';
 import { InputValidationError, NotFoundError } from '@/lib/errors';
 import { calculationSchema } from '@/validations/schemas/calculation-schema';
 import { nanoid } from 'nanoid';
+import select from 'flyonui/components/select';
 
 export class SavedCalculationService {
   static async createSavedCalc({ userId, details }) {
@@ -26,7 +27,6 @@ export class SavedCalculationService {
           create: value.details.map((detail) => ({
             id: nanoid(8),
             materialId: detail.materialId,
-            itemName: detail.itemName,
             weight: detail.weight,
             calculatedCn: detail.calculatedCn,
           })),
@@ -41,7 +41,7 @@ export class SavedCalculationService {
   }
 
   static async getSavedCalculations(userId) {
-    return await prisma.savedCalculation.findMany({
+    const savedData = await prisma.savedCalculation.findMany({
       where: {
         userId: userId,
       },
@@ -51,13 +51,27 @@ export class SavedCalculationService {
         calculationDetails: {
           select: {
             materialId: true,
-            itemName: true,
             weight: true,
             calculatedCn: true,
+            material: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },
     });
+
+    return savedData.map((calc) => ({
+      id: calc.id,
+      createdAt: calc.createdAt,
+      calculationDetails: calc.calculationDetails.map((detail) => ({
+        name: detail.material.name, 
+        weight: detail.weight,
+        calculatedCn: detail.calculatedCn,
+      })),
+    }));
   }
 
   static async getSavedCalculationById(scid) {
@@ -71,7 +85,6 @@ export class SavedCalculationService {
         calculationDetails: {
           select: {
             materialId: true,
-            itemName: true,
             weight: true,
             calculatedCn: true,
           },
