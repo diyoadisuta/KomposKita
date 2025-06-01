@@ -3,17 +3,44 @@ import { useEffect, useState } from 'react';
 
 export default function PerhitunganTersimpan() {
   const [savedCalc, setSavedCalc] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchSavedCalc = async () => {
-      const response = await fetch('/api/saved-calculations');
-      const responseJson = await response.json();
-      setSavedCalc(responseJson.data);
+      try {
+        const response = await fetch('/api/saved-calculations');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const responseJson = await response.json();
+        setSavedCalc(responseJson.data || []);
+      } catch (err) {
+        console.error('Error fetching calculations:', err);
+        setError(err.message || 'Failed to fetch calculations');
+      } finally {
+        setIsLoading(false);
+      }
     };
+
     fetchSavedCalc();
   }, []);
 
-  console.log(savedCalc)
+  if (isLoading) {
+    return (
+      <div className="min-h-[120vh] flex items-center justify-center">
+        <div className="text-center py-4">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-[120vh] flex items-center justify-center">
+        <div className="text-red-500 text-center py-4">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -21,14 +48,84 @@ export default function PerhitunganTersimpan() {
         <title>Perhitungan tersimpanmu</title>
       </Head>
 
-      <div className="min-h-[120vh]">
-        <div className=" min-h-[220px] flex items-center justify-center p-6">
-          <h1 className="text-2xl md:text-3xl font-semibold">
-            Perhitungan tersimpanmu
+      <div className="min-h-[120vh] bg-gray-50">
+        <div className="min-h-[220px] flex items-center justify-center p-6 bg-amber-800 shadow-sm">
+          <h1 className="text-2xl md:text-3xl font-semibold text-white">
+            Perhitungan Tersimpanmu
           </h1>
         </div>
-        <div className="container mx-auto md:min-w-4xl sm:max-w-md border-2 border-gray-100 shadow-sm rounded-sm">
-          
+        <div className="container mx-auto max-w-3xl py-8 px-4">
+          {!Array.isArray(savedCalc) || savedCalc.length === 0 ? (
+            <div className="text-center py-8 bg-white rounded-xl shadow-sm">
+              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">Belum ada perhitungan</h3>
+              <p className="mt-1 text-sm text-gray-500">Mulai hitung komposisi bahan kompos anda</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {savedCalc.map((calc) => (
+                <details
+                  key={calc.id}
+                  className="group bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100"
+                >
+                  <summary className="flex items-center justify-between p-4 cursor-pointer list-none hover:bg-gray-50">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-medium text-gray-900">
+                          Perhitungan {new Date(calc.createdAt).toLocaleDateString('id-ID')}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          {calc.calculationDetails.length} bahan kompos
+                        </p>
+                      </div>
+                    </div>
+                    <svg 
+                      className="w-5 h-5 text-gray-500 transform transition-transform duration-200 group-open:rotate-180"
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div className="p-4 border-t border-gray-100 bg-gray-50">
+                    <div className="space-y-2">
+                      {calc.calculationDetails.map((item) => (
+                        <div 
+                          key={item.materialId}
+                          className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-100 hover:border-green-200 transition-colors"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-green-50 rounded-full flex items-center justify-center">
+                              <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                            <span className="font-medium text-gray-900">{item.name}</span>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <span className="px-2.5 py-0.5 bg-gray-100 text-gray-800 rounded-full text-sm">
+                              {item.weight} kg
+                            </span>
+                            <span className="px-2.5 py-0.5 bg-green-50 text-green-700 rounded-full text-sm font-medium">
+                              C/N: {item.calculatedCn}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </details>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>
