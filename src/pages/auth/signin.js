@@ -39,7 +39,7 @@ export default function SignIn() {
       }
 
       mutate('/api/users/me');
-      router.push('/home');
+      router.push('/');
     } catch (err) {
       setError(err.message);
     } finally {

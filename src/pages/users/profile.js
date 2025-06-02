@@ -1,7 +1,7 @@
 import { UpdatePassword } from '@/components/UpdatePassword';
 import { UpdateProfile } from '@/components/UpdateProfile';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { authClient } from '@/lib/auth-client';
 import Image from 'next/image';
 import { CustomAlert } from '@/components/CustomAlert';
@@ -12,25 +12,61 @@ export default function Profile() {
   const [name, setName] = useState('');
   const [nameAlert, showNameAlert] = useAlert();
   const [passwordAlert, showPasswordAlert] = useAlert();
+  const [isChangingName, setIsChangingName] = useState(false);
+  const [isChangingPwd, setIsChangingPwd] = useState(false);
+  const [isChangingImg, setIsChangingImg] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (user) {
-      setName(user.fullName);
+      setName(user.fullName || '');
     }
   }, [user]);
 
-  const profileUpdateHandler = async (event) => {
+  const updateProfileImgHandler = async (event) => {
     event.preventDefault();
 
-    await authClient.updateUser({
-      name: name,
-    });
-    await mutate();
-    showNameAlert('success', 'Nama berhasil diperbarui');
+    setIsChangingImg(true);
+
+    try {
+      const fileInput = fileInputRef.current;
+      const file = fileInput?.files[0];
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      await fetch('/api/users/me', {
+        method: 'PUT',
+        body: formData,
+      });
+      await mutate();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsChangingImg(false);
+    }
+  };
+
+  const profileUpdateHandler = async (event) => {
+    event.preventDefault();
+    setIsChangingName(true);
+
+    try {
+      await authClient.updateUser({
+        name: name,
+      });
+      await mutate();
+      showNameAlert('success', 'Nama berhasil diperbarui');
+    } catch (error) {
+      console.error('changename: error:', error);
+    } finally {
+      setIsChangingName(false);
+    }
   };
 
   const changePasswordHandler = async ({ currentPassword, newPassword }) => {
     try {
+      setIsChangingPwd(true);
       const response = await authClient.changePassword({
         currentPassword: currentPassword,
         newPassword: newPassword,
@@ -43,6 +79,8 @@ export default function Profile() {
       }
     } catch (error) {
       console.error('changePwd: error:', error);
+    } finally {
+      setIsChangingPwd(false);
     }
   };
 
@@ -53,25 +91,51 @@ export default function Profile() {
   return (
     <div>
       <section>
-        <div className="sm:mx-auto flex justify-center my-8">
-          <div className="flex flex-col sm:min-w-md md:min-w-[800px] border-2 p-3 rounded-sm border-gray-200 justify-center gap-4">
+        <div className="container mx-auto px-4 py-12">
+          <div className="card sm:max-w-xl md:max-w-3xl mx-auto shadow-md p-4">
             <div>
               <h2 className="text-base-content text-2xl py-4 font-semibold border-b-2 border-gray-300">
                 Profile
               </h2>
             </div>
-            <div className="w-full rounded-none">
+            <div className="w-full rounded-none mt-2">
               <Image
-                src="/images/default-avatar.jpg"
+                src={user.image || '/images/default-avatar.jpg'}
                 width={150}
                 height={150}
                 alt="Foto profil"
               />
+
+              <form onSubmit={updateProfileImgHandler}>
+                <div className="max-w-sm mt-2">
+                  <label className="label-text font-bold" htmlFor="profile-img">
+                    Upload foto (Maks. 2MB)
+                  </label>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    className="input rounded-sm"
+                    accept="image/*"
+                    htmlFor="profile-img"
+                    name="file"
+                  />
+                </div>
+                <button className="btn rounded-sm mt-2" type="submit">
+                  {isChangingImg ? (
+                    <span className="loading loading-spinner loading-xs"></span>
+                  ) : (
+                    ''
+                  )}
+                  Ganti foto profil
+                </button>
+              </form>
+
               <UpdateProfile
                 name={name}
-                email={user?.email}
+                email={user?.email || ''}
                 profileUpdateHandler={profileUpdateHandler}
                 onChangeHandler={onChangeHandler}
+                isChangingName={isChangingName}
               />
 
               {nameAlert.type && (
@@ -86,7 +150,10 @@ export default function Profile() {
                 Ubah Password
               </h2>
             </div>
-            <UpdatePassword changePasswordHandler={changePasswordHandler} />
+            <UpdatePassword
+              changePasswordHandler={changePasswordHandler}
+              isChangingPwd={isChangingPwd}
+            />
 
             {passwordAlert.type && (
               <CustomAlert

@@ -4,6 +4,7 @@ export const UpdateProfile = ({
   email,
   profileUpdateHandler,
   onChangeHandler,
+  isChangingName,
 }) => {
   // TODO: ADD CHANGE IMAGE PROFILE
   return (
@@ -34,7 +35,14 @@ export const UpdateProfile = ({
             disabled
           />
         </div>
-        <button className="btn rounded-sm mt-4">Simpan</button>
+        <button className="btn rounded-sm mt-4">
+          {isChangingName ? (
+            <span className="loading loading-spinner loading-xs"></span>
+          ) : (
+            ''
+          )}
+          Simpan
+        </button>
       </form>
     </>
   );
