@@ -7,7 +7,6 @@ import { authClient } from '@/lib/auth-client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUserGear,
-  faPenToSquare,
   faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
@@ -30,7 +29,7 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="navbar bg-base-100 md:h-18 px-4 md:px-20 sticky top-0 start-0 z-50 shadow-base-300/20 shadow-sm">
+    <nav className="navbar bg-base-100 md:h-18 px-4 lg:px-20 sticky top-0 start-0 z-50 shadow-base-300/20 shadow-sm">
       <div className="w-full md:flex md:items-center md:gap-2">
         <div className="flex items-center justify-between">
           <div className="navbar-start items-center justify-between max-md:w-full">
@@ -85,13 +84,14 @@ export const Navbar = () => {
                   aria-expanded="false"
                   aria-label="Dropdown"
                 >
-                  <Image
-                    src={user.image || '/images/default-avatar.jpg'}
-                    alt="Profile"
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                  />
+                  <div className="w-8 h-8 rounded-full overflow-hidden relative">
+                    <Image
+                      src={user.image || '/images/default-avatar.jpg'}
+                      alt="Profile"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                   {user.fullName}
                   <span className="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4"></span>
                 </button>
@@ -114,12 +114,6 @@ export const Navbar = () => {
                     >
                       <FontAwesomeIcon icon={faBookmark} fixedWidth />
                       Perhitungan Tersimpan
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/#" className="dropdown-item">
-                      <FontAwesomeIcon icon={faPenToSquare} fixedWidth />
-                      Post Kamu
                     </Link>
                   </li>
                   <hr className="border-base-content/25 -mx-2" />

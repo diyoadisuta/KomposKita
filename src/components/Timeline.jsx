@@ -16,7 +16,7 @@ export const Timeline = () => {
             <div className="card">
               <div className="card-body gap-4">
                 <h5 className="card-title text-lg">
-                  Menuju halaman periksa kelayakan dan kalkulator
+                  Menuju halaman periksa kelayakan dan hitung komposisi
                 </h5>
                 <div className="card-actions">
                   <Link href="/periksa-bahan" className="btn btn-sm btn-soft">
@@ -68,10 +68,9 @@ export const Timeline = () => {
                   Masukkan data sampah yang layak
                 </h5>
                 <p>
-                  Setelah mendapatkan hasil kelayakan, masukkan data sampah
-                  tersebut dan klik tombol hitung. Setelah itu kamu akan
-                  mendapatkan rekomendasi berat untuk bahan kompos jika hasil
-                  kalkulasi berat kurang optimal.
+                  Setelah mendapatkan hasil kelayakan, pilih nama sampah
+                  tersebut dan klik "Tambah ke list". Kamu dapat mengulanginya
+                  jika ingin menambahkannya lagi.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <Image
@@ -96,10 +95,14 @@ export const Timeline = () => {
           <div className="timeline-start me-4 mb-8 w-full">
             <div className="card">
               <div className="card-body gap-4">
-                <h5 className="card-title text-lg">Simpan hasil rekomendasi</h5>
+                <h5 className="card-title text-lg">
+                  Hitung dan simpan hasil perhitungan
+                </h5>
                 <p>
-                  Belum memutuskan untuk komposting sekarang? tidak perlu
-                  khawatir! kamu dapat menyimpannya untuk nanti.
+                  Klik "Dapatkan hasil perhitungan" untuk melihat apakah
+                  komposisinya tepat dan kamu juga bisa menyimpan hasil
+                  perhitungan. Belum memutuskan untuk komposting sekarang? tidak
+                  perlu khawatir! kamu dapat menyimpannya untuk nanti.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <Image

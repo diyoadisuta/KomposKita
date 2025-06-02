@@ -6,8 +6,10 @@ import { SelectedList } from '@/components/SelectedList';
 import { CustomAlert } from '@/components/CustomAlert';
 import { useAlert } from '@/hooks/useAlert';
 import { RecommendationCard } from '@/components/RecommedationCard';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 
 export default function Rekomendasi() {
+  const { user } = useCurrentUser();
   const [materials, setMaterials] = useState([]);
   const [selectedMaterials, setSelectedMaterials] = useState([]);
   const [tempMaterial, setTempMaterial] = useState(null);
@@ -17,11 +19,13 @@ export default function Rekomendasi() {
   const [imageUrl, setImageUrl] = useState('');
   const [showCamera, setShowCamera] = useState(false);
 
+  const [isPredicting, setIsPredicting] = useState(false);
   const [predictionResult, setPredictionResult] = useState(null);
   const [recommendations, setRecommendations] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [successAlert, setSuccessAlert] = useAlert();
   const [messageAlert, setMessageAlert] = useAlert();
+  const [userAlert, setUserAlert] = useAlert();
 
   useEffect(() => {
     const fetchMaterials = async () => {
@@ -37,29 +41,36 @@ export default function Rekomendasi() {
 
   async function onPredictionSubmit(event) {
     event.preventDefault();
+    setIsPredicting(true);
 
-    const input = imageInput.current;
-    let file = input.files[0];
+    try {
+      const input = imageInput.current;
+      let file = input.files[0];
 
-    if (!file && imageUrl.startsWith('data:')) {
-      const blob = imageUrlToBlob(imageUrl);
-      file = new File(
-        [blob],
-        `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-        { type: blob.type }
-      );
+      if (!file && imageUrl.startsWith('data:')) {
+        const blob = imageUrlToBlob(imageUrl);
+        file = new File(
+          [blob],
+          `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+          { type: blob.type }
+        );
+      }
+
+      const formData = new FormData();
+      formData.append('image', file, file.name);
+
+      const response = await fetch('/api/predicts', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const responseJson = await response.json();
+      setPredictionResult(responseJson.result.label);
+    } catch (error) {
+      console.error('prediction: error:', error);
+    } finally {
+      setIsPredicting(false);
     }
-
-    const formData = new FormData();
-    formData.append('image', file, file.name);
-
-    const response = await fetch('/api/predicts', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const responseJson = await response.json();
-    setPredictionResult(responseJson.result.label);
   }
 
   const handleImageUpload = () => {
@@ -176,7 +187,6 @@ export default function Rekomendasi() {
     event.preventDefault();
 
     if (!selectedMaterials || selectedMaterials.length === 0) {
-      //TODO: FIX STYLING ALERT COLOR BUG
       setMessageAlert('error', 'Silahkan tambah list dahulu');
       return;
     }
@@ -238,12 +248,16 @@ export default function Rekomendasi() {
   };
 
   const handleSave = async () => {
+    if (!user) {
+      setUserAlert('error', 'Silahkan masuk terlebih dahulu');
+      return;
+    }
+
     if (!recommendations || !selectedMaterials) {
       return;
     }
 
     setIsSaving(true);
-    setSaveSuccess(false);
 
     try {
       const details = selectedMaterials.map((material) => ({
@@ -267,7 +281,7 @@ export default function Rekomendasi() {
       const responseJson = await response.json();
 
       if (response.ok) {
-        setSaveSuccess(true);
+        setSuccessAlert('success', 'Berhasil disimpan');
       } else {
         throw new Error(responseJson.message || 'Failed to save calculation');
       }
@@ -284,7 +298,7 @@ export default function Rekomendasi() {
         <title>Periksa kelayakan dan Hitung Bahan</title>
       </Head>
 
-      <div className="min-h-[120vh] bg-gray-50">
+      <div className="min-h-[100vh]">
         <div className=" bg-amber-800 min-h-[220px] flex items-center justify-center p-6">
           <h1 className="text-2xl md:text-3xl font-semibold text-white">
             Periksa kelayakan dan Hitung Bahan Komposting
@@ -293,7 +307,7 @@ export default function Rekomendasi() {
 
         <main className="container mx-auto px-4 py-12">
           {/* Photo Upload Section */}
-          <div className="card sm:max-w-md md:max-w-4xl mx-auto shadow-md">
+          <div className="card sm:max-w-xl md:max-w-4xl mx-auto shadow-md">
             <div className="card-body">
               <h2 className="text-xl font-semibold mb-4">Upload Foto</h2>
               <div className="flex space-x-4">
@@ -338,6 +352,11 @@ export default function Rekomendasi() {
                     className="btn btn-outline rounded-md mt-2"
                     type="submit"
                   >
+                    {isPredicting ? (
+                      <span className="loading loading-spinner loading-xs"></span>
+                    ) : (
+                      ''
+                    )}
                     Dapatkan hasil prediksi
                   </button>
                 )}
@@ -405,7 +424,7 @@ export default function Rekomendasi() {
                 </div>
 
                 <div className="md:max-w-sm">
-                  <label class="label-text" htmlFor="weight">
+                  <label className="label-text" htmlFor="weight">
                     Berat (kg)
                   </label>
                   <input
@@ -421,15 +440,15 @@ export default function Rekomendasi() {
                 </div>
                 <div className=" flex items-end">
                   <button
-                    class="btn btn-soft item rounded-sm"
+                    className="btn btn-soft item rounded-sm"
                     onClick={addTempMaterialToList}
                   >
                     Tambah ke list
                   </button>
                 </div>
 
-                <div class="border-base-content/25 w-full overflow-x-auto border">
-                  <table class="table">
+                <div className="border-base-content/25 w-full overflow-x-auto border">
+                  <table className="table">
                     <thead>
                       <tr>
                         <th>Jenis Sisa Sampah</th>
@@ -458,8 +477,15 @@ export default function Rekomendasi() {
                   />
                 )}
 
+                {userAlert.type && (
+                  <CustomAlert
+                    type={userAlert.type}
+                    message={userAlert.message}
+                  />
+                )}
+
                 <div className="flex flex-col gap-4">
-                  <button class="btn btn-soft" onClick={calculationHandler}>
+                  <button className="btn btn-soft" onClick={calculationHandler}>
                     Dapatkan hasil perhitungan
                   </button>
 
@@ -468,6 +494,13 @@ export default function Rekomendasi() {
                       recommendations={recommendations}
                       onClick={handleSave}
                       isSaving={isSaving}
+                    />
+                  )}
+
+                  {successAlert.type && (
+                    <CustomAlert
+                      type={successAlert.type}
+                      message={successAlert.message}
                     />
                   )}
                 </div>

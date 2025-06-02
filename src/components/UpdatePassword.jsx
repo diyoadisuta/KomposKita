@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const UpdatePassword = ({ changePasswordHandler }) => {
+export const UpdatePassword = ({ changePasswordHandler, isChangingPwd }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
@@ -16,7 +16,7 @@ export const UpdatePassword = ({ changePasswordHandler }) => {
   return (
     <>
       <form onSubmit={onHandleSubmit}>
-        <div className="w-96 flex flex-col gap-2">
+        <div className="max-w-96 flex flex-col gap-2">
           <label className="label-text font-bold" htmlFor="oldPasword">
             Password Lama<span className="text-red-600"> *</span>
           </label>
@@ -26,6 +26,7 @@ export const UpdatePassword = ({ changePasswordHandler }) => {
             id="oldPasword"
             name="currentPassword"
             value={currentPassword}
+            required
             onChange={(event) => setCurrentPassword(event.target.value)}
           />
 
@@ -38,10 +39,18 @@ export const UpdatePassword = ({ changePasswordHandler }) => {
             id="newPasword"
             name="newPassword"
             value={newPassword}
+            required
             onChange={(event) => setNewPassword(event.target.value)}
           />
         </div>
-        <button className="btn rounded-sm mt-4">Ubah Password</button>
+        <button className="btn rounded-sm mt-4">
+          {isChangingPwd ? (
+            <span className="loading loading-spinner loading-xs"></span>
+          ) : (
+            ''
+          )}
+          Ubah Password
+        </button>
       </form>
     </>
   );

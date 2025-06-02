@@ -15,7 +15,7 @@ export const PostCard = ({ id, title, author, createdAt, tag }) => {
       <td className="cursor-pointer break-words">{title}</td>
       <td className="cursor-pointer">{formattedDate}</td>
       <td className="cursor-pointer">
-        <span className="badge badge-info text-md">{tag}</span>
+        <span className="badge badge-default text-md">{tag}</span>
       </td>
     </tr>
   );
