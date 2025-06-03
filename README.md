@@ -21,7 +21,7 @@ Menurut data dari Sistem Informasi Pengelolaan Sampah Nasional (SIPSN) per tahun
 
 ## Goal
 1. Mengembangkan website yang edukatif untuk memberikan informasi mengenai manfaat komposting dan jenis sampah rumah tangga yang layak digunakan sebagai bahan kompos.
-2. Menyediakan fitur dalam website yang dapat memprediksi sampah yang layak digunakan sebagai bahan kompos serta kalkulator bahan komposting untuk mengetahui apakah sampah dalam rasio yang optimal.
+2. Menyediakan fitur dalam website yang dapat memprediksi sampah yang layak digunakan sebagai bahan kompos serta kalkulator bahan komposting untuk mengetahui apakah sampah dalam rasio yang optimal untuk dikompos.
 3. Melalui edukasi dan panduan praktis, website ini bertujuan untuk mendorong masyarakat mengolah sampah organik mereka sendiri, sehingga mengurangi volume sampah yang dikirim ke tempat pemrosesan akhir.
 
 # Technologies
