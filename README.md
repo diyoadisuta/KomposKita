@@ -15,8 +15,14 @@ Menurut data dari Sistem Informasi Pengelolaan Sampah Nasional (SIPSN) per tahun
 
 # Business Understanding
 ## Problem Statement
+1. Masyarakat masih kurang menyadari bahwa sampah rumah tangga, terutama sisa makanan, dapat dimanfaatkan melalui proses komposting untuk menghasilkan kompos berkualitas.
+2. Banyak individu tidak memiliki pengetahuan yang memadai mengenai jenis sampah organik yang dapat digunakan dalam proses komposting, sehingga potensi pengurangan limbah organik tidak termanfaatkan secara maksimal.
+3. Terbatasnya panduan yang mudah diakses dan aplikatif mengenai cara melakukan komposting di rumah menyebabkan masyarakat enggan memulai praktik ini.
 
 ## Goal
+1. Mengembangkan website yang edukatif untuk memberikan informasi mengenai manfaat komposting dan jenis sampah rumah tangga yang layak digunakan sebagai bahan kompos.
+2. Menyediakan fitur dalam website yang memberikan langkah-langkah praktis dan rekomendasi rasio bahan kompos untuk membantu pengguna melakukan komposting secara efektif di rumah.
+3. Melalui edukasi dan panduan praktis, website ini bertujuan untuk mendorong masyarakat mengolah sampah organik mereka sendiri, sehingga mengurangi volume sampah yang dikirim ke tempat pemrosesan akhir.
 
 # Technologies
 ## Machine Learning 
