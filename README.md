@@ -1,15 +1,14 @@
-![Logo_KomposKita](https://github.com/user-attachments/assets/a1df7a56-c5ec-47e4-a199-9ce7c7a5ac3d)
-
+![Logo_KomposKita](https://github.com/user-attachments/assets/dff73c5a-b162-4120-972f-5293fcac715f)
 
 # Our Team
 |          Nama         | Cohort-ID |       Path       |
 |:---------------------:|:----------:|:----------------:|
-|  Muhammad Fauzani Akbar  |  MC528D5Y0070   | Machine Learning |
-|  Mochammad Syafiq Ilallah  |  MC006D5Y2189   | Machine Learning |
-|  Dewi Puspita    |  MC834D5X1362  |   Machine Learning |
-|  Delvia   |  FC153D5X0576   |  FEBE |
-|  Delwinro Purba Siboro  |  FC304D5Y0867   |  FEBE |
-|  Dio Adista Laksono     |  FC458D5Y2266   |      FEBE     |
+|  Muhammad Fauzani Akbar  |  MC528D5Y0070   | Machine Learning Engineer|
+|  Mochammad Syafiq Ilallah  |  MC006D5Y2189   | Machine Learning Engineer|
+|  Dewi Puspita    |  MC834D5X1362  |   Machine Learning Engineer|
+|  Delvia   |  FC153D5X0576   |  Front-End and Back-End Developer |
+|  Delwinro Purba Siboro  |  FC304D5Y0867   |  Front-End and Back-End Developer |
+|  Dio Adista Laksono     |  FC458D5Y2266   |  Front-End and Back-End Developer |
 
 # Project Overview
 Menurut data dari Sistem Informasi Pengelolaan Sampah Nasional (SIPSN) per tahun 2024, komposisi sampah terbesar berasal dari Rumah Tangga dengan proporsi 50.79% dan jenis sampah terbesar adalah Sisa Makanan dengan proporsi 39.35%. Banyak sampah rumah tangga yang seharusnya dapat dimanfaatkan justru berakhir di tempat pembuangan akhir. Permasalahan yang ingin kami atasi adalah rendahnya kesadaran masyarakat terhadap potensi sampah rumah tangga melalui praktik komposting. Oleh karena itu, kami merumuskan pertanyaan penelitian sebagai berikut: Bagaimana membantu masyarakat mengenali sampah yang layak untuk digunakan sebagai bahan komposting agar masyarakat dapat mengurangi limbah sekaligus menghasilkan kompos berkualitas? Dengan latar belakang tersebut, kami bertujuan mengembangkan sebuah aplikasi untuk memberikan informasi kepada pengguna mengenai sampah rumah tangga yang layak digunakan sebagai bahan komposting dan rekomendasi rasio yang tepat untuk proses dekomposisi yang optimal dalam menghasilkan kompos berkualitas sebagai solusi yang mudah diakses, edukatif, dan aplikatif. Kami berharap aplikasi website ini mampu membantu masyarakat memahami bahwa sisa sampah rumah tangga bukan hanya menjadi limbah, melainkan sumber daya yang berharga dan dapat dimanfaatkan untuk mendukung keberlanjutan lingkungan.
