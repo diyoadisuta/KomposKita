@@ -102,7 +102,7 @@ export default function Profile() {
             </div>
             <div className="w-full rounded-none mt-2">
               <Image
-                src={user.image || '/images/default-avatar.jpg'}
+                src={user?.image || '/images/default-avatar.jpg'}
                 width={150}
                 height={150}
                 alt="Foto profil"
