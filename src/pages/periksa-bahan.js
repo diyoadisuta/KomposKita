@@ -89,22 +89,54 @@ export default function Rekomendasi() {
   const handleCameraClick = async () => {
   try {
     setShowCamera(true);
+    
+    // Check if mediaDevices is supported
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      throw new Error('Camera API not supported on this device/browser');
+    }
+
+    // Get list of available cameras
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
     const constraints = {
       video: {
         facingMode: facingMode,
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
+        width: { ideal: 1280, min: 320 },
+        height: { ideal: 720, min: 240 },
       }
     };
 
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    streamRef.current = stream;
-    if (videoRef.current) {
-      videoRef.current.srcObject = stream;
+    // For mobile devices with multiple cameras
+    if (videoDevices.length > 1) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        streamRef.current = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          // Ensure video plays on iOS Safari
+          videoRef.current.setAttribute('playsinline', true);
+        }
+      } catch (err) {
+        console.error('Error accessing specific camera:', err);
+        // Fallback to basic video constraints
+        const basicStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        streamRef.current = basicStream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = basicStream;
+        }
+      }
+    } else {
+      // For devices with single camera or desktop
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
     }
   } catch (err) {
     console.error('Error accessing camera:', err);
-    setMessageAlert('error', 'Tidak dapat mengakses kamera');
+    setMessageAlert('error', 'Tidak dapat mengakses kamera. Pastikan browser memiliki izin mengakses kamera.');
   }
 };
 
