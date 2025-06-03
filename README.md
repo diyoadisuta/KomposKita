@@ -50,7 +50,7 @@ Dataset berisi **12.464 gambar sampah** dan kami menyimpannya di Google Drive. D
 📊 Evaluasi mencakup *confusion matrix* dan *classification report*.
 
 ✨ Model juga dapat dipakai langsung untuk memprediksi gambar baru via upload.
-🌐 Terakhir, model dikonversi ke **save_model & Tensorflow.Js** agar bisa dijalankan langsung di browser (web-based).
+🌐 Terakhir, model dikonversi ke **save_model** agar bisa dijalankan langsung di browser (web-based).
 
 ## Front End
 - Next
