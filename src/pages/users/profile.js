@@ -6,6 +6,7 @@ import { authClient } from '@/lib/auth-client';
 import Image from 'next/image';
 import { CustomAlert } from '@/components/CustomAlert';
 import { useAlert } from '@/hooks/useAlert';
+import Head from 'next/head';
 
 export default function Profile() {
   const { user, mutate } = useCurrentUser();
@@ -90,6 +91,7 @@ export default function Profile() {
 
   return (
     <div>
+      <Head>Profile Saya - KomposKita</Head>
       <section>
         <div className="container mx-auto px-4 py-12">
           <div className="card sm:max-w-xl md:max-w-3xl mx-auto shadow-md p-4">

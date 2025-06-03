@@ -10,6 +10,7 @@ import { useState } from 'react';
 import dayjs from 'dayjs';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import Head from 'next/head';
 
 export async function getStaticPaths() {
   const posts = await PostService.getPosts();
@@ -84,141 +85,147 @@ export default function PostPage({ post, comments }) {
   };
 
   return (
-    <div className="min-h-[100vh">
-      <div className="container md:mx-auto flex justify-center p-6">
-        <div className="flex-col">
-          <div className="card sm:max-w-xl md:min-w-2xl mx-auto rounded-none">
-            {isEditing ? (
-              <div className="card-body">
-                <form onSubmit={onEditHandler}>
-                  <div className="w-full">
-                    <label
-                      className="label-text text-base font-semibold"
-                      htmlFor="title"
-                    >
-                      Judul
-                    </label>
-                    <input
-                      type="text"
-                      className="input rounded-sm"
-                      id="title"
-                      name="title"
-                      defaultValue={post.title}
-                      required
-                    />
-                  </div>
-                  <div className="w-full">
-                    <label
-                      className="label-text text-base font-semibold"
-                      htmlFor="description"
-                    >
-                      Keterangan
-                    </label>
-                    <textarea
-                      className="input rounded-sm min-h-[100px]"
-                      id="description"
-                      name="description"
-                      defaultValue={post.description}
-                      required
-                    />
-                  </div>
+    <>
+      <Head>
+        <title>Forum - KomposKita</title>
+      </Head>
 
-                  {showAlert.type && (
-                    <CustomAlert
-                      type={showAlert.type}
-                      message={showAlert.message}
-                    />
-                  )}
-
-                  <button
-                    className="btn btn-primary btn-sm rounded-none mt-2"
-                    type="submit"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-primary btn-sm rounded-none mt-2"
-                    type="button"
-                    onClick={() => setIsEditing(false)}
-                  >
-                    Batal
-                  </button>
-                </form>
-              </div>
-            ) : (
-              <>
-                <div className="card-header">
-                  <div className="flex justify-between">
-                    <h5 className="card-title">{post.title}</h5>
-
-                    {user && user.id == post.userId && !post.deletedAt && (
-                      <div className="items-end flex gap-2">
-                        <CustomButton
-                          onClick={() => setIsEditing(true)}
-                          icon={faPenToSquare}
-                        />
-                        <CustomButton
-                          onClick={onDeleteHandler}
-                          icon={faTrash}
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  <p>{formattedCreatedAt}</p>
-
-                  <p className="text-base">
-                    <span className="icon-[line-md--account] size-3"></span>
-                    {post.author}
-                  </p>
-                </div>
-
-                {post.deletedAt ? (
-                  <div className="card-body min-h-[200px]">
-                    <p className="italic">
-                      Postingan telah dihapus oleh penulis
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <div className="card-body min-h-[200px]">
-                      <p className="text-black">{post.description}</p>
+      <div className="min-h-[100vh">
+        <div className="container md:mx-auto flex justify-center p-6">
+          <div className="flex-col">
+            <div className="card sm:max-w-xl md:min-w-2xl mx-auto rounded-none">
+              {isEditing ? (
+                <div className="card-body">
+                  <form onSubmit={onEditHandler}>
+                    <div className="w-full">
+                      <label
+                        className="label-text text-base font-semibold"
+                        htmlFor="title"
+                      >
+                        Judul
+                      </label>
+                      <input
+                        type="text"
+                        className="input rounded-sm"
+                        id="title"
+                        name="title"
+                        defaultValue={post.title}
+                        required
+                      />
+                    </div>
+                    <div className="w-full">
+                      <label
+                        className="label-text text-base font-semibold"
+                        htmlFor="description"
+                      >
+                        Keterangan
+                      </label>
+                      <textarea
+                        className="input rounded-sm min-h-[100px]"
+                        id="description"
+                        name="description"
+                        defaultValue={post.description}
+                        required
+                      />
                     </div>
 
-                    <div className="card-footer">
-                      {isEdited && (
-                        <p className="italic">
-                          Diupdate pada {formattedUpdatedAt}
-                        </p>
+                    {showAlert.type && (
+                      <CustomAlert
+                        type={showAlert.type}
+                        message={showAlert.message}
+                      />
+                    )}
+
+                    <button
+                      className="btn btn-primary btn-sm rounded-none mt-2"
+                      type="submit"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-primary btn-sm rounded-none mt-2"
+                      type="button"
+                      onClick={() => setIsEditing(false)}
+                    >
+                      Batal
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <>
+                  <div className="card-header">
+                    <div className="flex justify-between">
+                      <h5 className="card-title">{post.title}</h5>
+
+                      {user && user.id == post.userId && !post.deletedAt && (
+                        <div className="items-end flex gap-2">
+                          <CustomButton
+                            onClick={() => setIsEditing(true)}
+                            icon={faPenToSquare}
+                          />
+                          <CustomButton
+                            onClick={onDeleteHandler}
+                            icon={faTrash}
+                          />
+                        </div>
                       )}
                     </div>
-                  </>
-                )}
-              </>
-            )}
-          </div>
-          <div className="card card-sm md:max-w-2xl sm:max-w-sm rounded-none p-2">
-            <div className="card-header">
-              <h5 className="card-title border-b-2">Komentar</h5>
+
+                    <p>{formattedCreatedAt}</p>
+
+                    <p className="text-base">
+                      <span className="icon-[line-md--account] size-3"></span>
+                      {post.author}
+                    </p>
+                  </div>
+
+                  {post.deletedAt ? (
+                    <div className="card-body min-h-[200px]">
+                      <p className="italic">
+                        Postingan telah dihapus oleh penulis
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="card-body min-h-[200px]">
+                        <p className="text-black">{post.description}</p>
+                      </div>
+
+                      <div className="card-footer">
+                        {isEdited && (
+                          <p className="italic">
+                            Diupdate pada {formattedUpdatedAt}
+                          </p>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
             </div>
-            <div className="card-body min-h-[200px]">
-              <CommentInput postId={post.id} />
-              {comments.map((comment) => (
-                <CommentCard
-                  key={comment.id}
-                  id={comment.id}
-                  postId={post.id}
-                  author={comment.author}
-                  message={comment.message}
-                  createdAt={comment.createdAt}
-                  userId={comment.userId}
-                  currentUser={user}
-                />
-              ))}
+            <div className="card card-sm md:max-w-2xl sm:max-w-sm rounded-none p-2">
+              <div className="card-header">
+                <h5 className="card-title border-b-2">Komentar</h5>
+              </div>
+              <div className="card-body min-h-[200px]">
+                <CommentInput postId={post.id} />
+                {comments.map((comment) => (
+                  <CommentCard
+                    key={comment.id}
+                    id={comment.id}
+                    postId={post.id}
+                    author={comment.author}
+                    message={comment.message}
+                    createdAt={comment.createdAt}
+                    userId={comment.userId}
+                    currentUser={user}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

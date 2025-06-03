@@ -35,7 +35,7 @@ export const CommentCard = ({ id, postId, author, message, createdAt, userId, cu
 
   return (
     <div>
-      <div className="card card-sm w-full sm:min-w-xl md:min-w-2xl rounded-none" key={id}>
+      <div className="ccard card-sm md:max-w-2xl sm:max-w-sm rounded-none" key={id}>
         <div className="card-header">
           <div className="flex justify-between items-center">
             <h5 className="text-base font-medium">

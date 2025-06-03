@@ -3,19 +3,32 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { authClient } from '@/lib/auth-client';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUserGear,
   faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark } from '@fortawesome/free-regular-svg-icons';
+import { useEffect } from 'react';
 
 export const Navbar = () => {
   const router = useRouter();
   const { user, mutate } = useCurrentUser();
 
   const isLoggedIn = !!user;
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        if (
+          window.HSStaticMethods &&
+          typeof window.HSStaticMethods.autoInit === 'function'
+        ) {
+          window.HSStaticMethods.autoInit();
+        }
+      }, 100);
+    }
+  }, [user]);
 
   const signOutHandler = async () => {
     await authClient.signOut({

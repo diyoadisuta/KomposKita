@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export default function PerhitunganTersimpan() {
   const [savedCalc, setSavedCalc] = useState([]);
@@ -100,7 +101,8 @@ export default function PerhitunganTersimpan() {
                 Belum ada perhitungan
               </h3>
               <p className="mt-1 text-sm text-gray-500">
-                Mulai hitung komposisi bahan kompos anda
+                Mulai hitung komposisi bahan kompos anda{' '}
+                <Link href="/periksa-bahan" className='text-blue-600 font-semibold'>disini</Link>
               </p>
             </div>
           ) : (

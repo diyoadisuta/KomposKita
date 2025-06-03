@@ -1,4 +1,4 @@
-export const CommentInput = ({ postId }) => {
+export const CommentInput = ({ postId, isLoggedIn }) => {
   async function onSubmit(event) {
     const formData = new FormData(event.target);
     const message = formData.get('message');
@@ -20,14 +20,16 @@ export const CommentInput = ({ postId }) => {
           type="text"
           name="message"
           placeholder="Tambah komentar"
+          disabled={!isLoggedIn}
           className="input max-w-fill text-base rounded-md min-h-[50px]"
           required
         />
         <button
           className="btn btn-primary btn-sm rounded-md mt-2"
           type="submit"
+          disabled={!isLoggedIn}
         >
-          Tambah komentar
+           {isLoggedIn ? 'Tambah Komentar' : 'Masuk untuk menambahkan komentar'}
         </button>
       </form>
     </div>

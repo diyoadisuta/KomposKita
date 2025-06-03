@@ -11,6 +11,19 @@ export default function FlyonuiScript() {
   useEffect(() => {
     const initFlyonUI = async () => {
       await loadFlyonUI();
+
+      const initializeComponents = () => {
+        if (
+          window.HSStaticMethods &&
+          typeof window.HSStaticMethods.autoInit === 'function'
+        ) {
+          window.HSStaticMethods.autoInit();
+        }
+      };
+      
+      setTimeout(initializeComponents, 100);
+      setTimeout(initializeComponents, 300);
+      setTimeout(initializeComponents, 500);
     };
 
     initFlyonUI();
