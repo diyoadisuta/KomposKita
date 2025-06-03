@@ -90,7 +90,7 @@ export default function PostPage({ post, comments }) {
         <title>Forum - KomposKita</title>
       </Head>
 
-      <div className="min-h-[100vh">
+      <div className="min-h-[100vh]">
         <div className="container md:mx-auto flex justify-center p-6">
           <div className="flex-col">
             <div className="card sm:max-w-xl md:min-w-2xl mx-auto rounded-none">
@@ -208,7 +208,7 @@ export default function PostPage({ post, comments }) {
                 <h5 className="card-title border-b-2">Komentar</h5>
               </div>
               <div className="card-body min-h-[200px]">
-                <CommentInput postId={post.id} />
+                <CommentInput postId={post.id} isLoggedIn={user} />
                 {comments.map((comment) => (
                   <CommentCard
                     key={comment.id}

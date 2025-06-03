@@ -1,4 +1,8 @@
+import { useRouter } from 'next/router';
+
 export const CommentInput = ({ postId, isLoggedIn }) => {
+  const router = useRouter();
+
   async function onSubmit(event) {
     const formData = new FormData(event.target);
     const message = formData.get('message');
@@ -10,6 +14,7 @@ export const CommentInput = ({ postId, isLoggedIn }) => {
 
     if (response.ok) {
       event.target.reset();
+      router.push(`/forum/${postId}`)
     }
   }
 
@@ -29,7 +34,7 @@ export const CommentInput = ({ postId, isLoggedIn }) => {
           type="submit"
           disabled={!isLoggedIn}
         >
-           {isLoggedIn ? 'Tambah Komentar' : 'Masuk untuk menambahkan komentar'}
+          {isLoggedIn ? 'Tambah Komentar' : 'Masuk untuk menambahkan komentar'}
         </button>
       </form>
     </div>
