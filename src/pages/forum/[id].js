@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 export async function getStaticPaths() {
   const posts = await PostService.getPosts();
@@ -46,6 +47,7 @@ export async function getStaticProps({ params }) {
 }
 
 export default function PostPage({ post, comments }) {
+  const router = useRouter();
   const { user } = useCurrentUser();
   const [showAlert, setShowAlert] = useAlert();
   const [isEditing, setIsEditing] = useState(false);
@@ -74,6 +76,7 @@ export default function PostPage({ post, comments }) {
   };
 
   const onDeleteHandler = async (event) => {
+    event.preventDefault(event);
     const response = await fetch(`/api/posts/${post.id}`, {
       method: 'DELETE',
     });
@@ -83,6 +86,7 @@ export default function PostPage({ post, comments }) {
     }
 
     setShowAlert('success', 'Post berhasil dihapus');
+    router.push(`/forum/${post.id}`);
   };
 
   return (

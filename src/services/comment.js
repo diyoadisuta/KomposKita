@@ -73,6 +73,9 @@ export class CommentService {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     return postCommentsData.map(
