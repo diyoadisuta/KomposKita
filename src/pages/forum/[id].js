@@ -19,7 +19,7 @@ export async function getStaticPaths() {
     params: { id: post.id.toString() },
   }));
 
-  return { paths, fallback: false };
+  return { paths, fallback: 'blocking' };
 }
 
 export async function getStaticProps({ params }) {
@@ -41,6 +41,7 @@ export async function getStaticProps({ params }) {
 
   return {
     props: { post: serializedPost ?? [], comments: serializedComments ?? [] },
+    revalidate: 60,
   };
 }
 
