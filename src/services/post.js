@@ -51,6 +51,9 @@ export class PostService {
           },
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     return postsData.map(
