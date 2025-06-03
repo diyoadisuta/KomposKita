@@ -59,13 +59,14 @@ export default function Rekomendasi() {
       const formData = new FormData();
       formData.append('image', file, file.name);
 
-      const response = await fetch('/api/predicts', {
+      const response = await fetch('https://web-production-e2cf.up.railway.app/predict', {
         method: 'POST',
         body: formData,
       });
 
       const responseJson = await response.json();
-      setPredictionResult(responseJson.result.label);
+      console.log(responseJson)
+      setPredictionResult(responseJson.label);
     } catch (error) {
       console.error('prediction: error:', error);
     } finally {
