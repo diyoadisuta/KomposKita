@@ -34,8 +34,12 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       });
 
+      const responseJson = await response.json();
+
       if (!response.ok) {
-        throw new Error(data.message || 'Login gagal');
+        if (responseJson.code === 'INVALID_EMAIL_OR_PASSWORD') {
+          throw new Error('Email atau password salah' || 'Login gagal');
+        }
       }
 
       mutate('/api/users/me');

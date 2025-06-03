@@ -145,7 +145,6 @@ export default function Rekomendasi() {
 
   const getMaterialsByCategory = () => {
     let filteredMaterials = materials;
-
     const currentResult = predictionResult;
 
     if (currentResult == 'Sampah Organik Basah (LAYAK KOMPOS)') {
@@ -249,7 +248,7 @@ export default function Rekomendasi() {
 
   const handleSave = async () => {
     if (!user) {
-      setUserAlert('error', 'Silahkan masuk terlebih dahulu');
+      setUserAlert('error', 'Silahkan masuk terlebih dahulu!');
       return;
     }
 
@@ -305,209 +304,213 @@ export default function Rekomendasi() {
           </h1>
         </div>
 
-        <main className="container mx-auto px-4 py-12">
-          {/* Photo Upload Section */}
-          <div className="card sm:max-w-xl md:max-w-4xl mx-auto shadow-md">
-            <div className="card-body">
-              <h2 className="text-xl font-semibold mb-4">Upload Foto</h2>
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => imageInput.current?.click()}
-                  className="btn btn-primary rounded-md"
-                >
-                  Upload foto
-                </button>
-                <button
-                  onClick={handleCameraClick}
-                  className="btn btn-primary rounded-md"
-                >
-                  Buka kamera
-                </button>
-              </div>
-
-              {imageUrl && (
-                <div className="mt-4">
-                  <Image
-                    src={imageUrl}
-                    alt="Uploaded waste"
-                    width={400}
-                    height={300}
-                    name="image"
-                    className="rounded-lg"
-                  />
+        <section>
+          <div className="container mx-auto px-4 py-12">
+            {/* Photo Upload Section */}
+            <div className="card sm:max-w-xl md:max-w-4xl mx-auto shadow-md">
+              <div className="card-body">
+                <h2 className="text-xl font-semibold mb-4">Upload Foto</h2>
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => imageInput.current?.click()}
+                    className="btn btn-primary rounded-md"
+                  >
+                    Upload foto
+                  </button>
+                  <button
+                    onClick={handleCameraClick}
+                    className="btn btn-primary rounded-md"
+                  >
+                    Buka kamera
+                  </button>
                 </div>
-              )}
-
-              <form onSubmit={onPredictionSubmit}>
-                <input
-                  type="file"
-                  ref={imageInput}
-                  onChange={handleImageUpload}
-                  accept="image/*"
-                  className="hidden"
-                />
 
                 {imageUrl && (
-                  <button
-                    className="btn btn-outline rounded-md mt-2"
-                    type="submit"
-                  >
-                    {isPredicting ? (
-                      <span className="loading loading-spinner loading-xs"></span>
-                    ) : (
-                      ''
-                    )}
-                    Dapatkan hasil prediksi
-                  </button>
+                  <div className="mt-4">
+                    <Image
+                      src={imageUrl}
+                      alt="Uploaded waste"
+                      width={400}
+                      height={300}
+                      name="image"
+                      className="rounded-lg"
+                    />
+                  </div>
                 )}
-              </form>
 
-              {predictionResult && (
-                <div>
-                  <p
-                    className={`font-bold ${
-                      predictionResult == 'Sampah Tidak Layak Kompos'
-                        ? 'text-red-500'
-                        : 'text-green-500'
-                    }`}
-                  >
-                    {predictionResult}
-                  </p>
-                </div>
-              )}
-
-              {showCamera && (
-                <div className="mt-4">
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    playsInline
-                    className="w-full max-w-md rounded-lg"
+                <form onSubmit={onPredictionSubmit}>
+                  <input
+                    type="file"
+                    ref={imageInput}
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    className="hidden"
                   />
-                  <div className="mt-2 flex space-x-2">
+
+                  {imageUrl && (
                     <button
-                      onClick={captureImage}
-                      className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+                      className="btn btn-outline rounded-md mt-2"
+                      type="submit"
                     >
-                      Ambil Foto
+                      {isPredicting ? (
+                        <span className="loading loading-spinner loading-xs"></span>
+                      ) : (
+                        ''
+                      )}
+                      Dapatkan hasil prediksi
                     </button>
-                    <button
-                      onClick={stopCamera}
-                      className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                  )}
+                </form>
+
+                {predictionResult && (
+                  <div>
+                    <p
+                      className={`font-bold ${
+                        predictionResult == 'Sampah Tidak Layak Kompos'
+                          ? 'text-red-500'
+                          : 'text-green-500'
+                      }`}
                     >
-                      Tutup Kamera
+                      {predictionResult}
+                    </p>
+                  </div>
+                )}
+
+                {showCamera && (
+                  <div className="mt-4">
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      className="w-full max-w-md rounded-lg"
+                    />
+                    <div className="mt-2 flex space-x-2">
+                      <button
+                        onClick={captureImage}
+                        className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+                      >
+                        Ambil Foto
+                      </button>
+                      <button
+                        onClick={stopCamera}
+                        className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                      >
+                        Tutup Kamera
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-row flex-wrap gap-4">
+                  <div className="md:max-w-sm">
+                    <label className="label-text" htmlFor="materials">
+                      Jenis sisa sampah
+                    </label>
+                    <select
+                      className="select rounded-sm md:min-w-xs"
+                      id="materials"
+                      value={tempMaterial?.id || ''}
+                      onChange={(e) => {
+                        selectedTempMaterialHandler(e);
+                      }}
+                    >
+                      <option value="">— Pilih nama sisa sampah —</option>
+                      {getMaterialsByCategory().map((material) => (
+                        <option key={material.id} value={material.id}>
+                          {material.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="md:max-w-sm">
+                    <label className="label-text" htmlFor="weight">
+                      Berat (kg)
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="0.5"
+                      className="input rounded-sm sm:max-w-20"
+                      id="weight"
+                      value={tempWeight}
+                      onChange={(e) => {
+                        setTempWeight(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className=" flex items-end">
+                    <button
+                      className="btn btn-soft item rounded-sm"
+                      onClick={addTempMaterialToList}
+                    >
+                      Tambah ke list
                     </button>
                   </div>
-                </div>
-              )}
 
-              <div className="flex flex-row flex-wrap gap-4">
-                <div className="md:max-w-sm">
-                  <label className="label-text" htmlFor="materials">
-                    Jenis sisa sampah
-                  </label>
-                  <select
-                    className="select rounded-sm md:min-w-xs"
-                    id="materials"
-                    value={tempMaterial?.id || ''}
-                    onChange={(e) => {
-                      selectedTempMaterialHandler(e);
-                    }}
-                  >
-                    <option value="">— Pilih nama sisa sampah —</option>
-                    {getMaterialsByCategory().map((material) => (
-                      <option key={material.id} value={material.id}>
-                        {material.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                  <div className="border-base-content/25 w-full overflow-x-auto border">
+                    <table className="table">
+                      <thead>
+                        <tr>
+                          <th>Jenis Sisa Sampah</th>
+                          <th>Berat</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {selectedMaterials &&
+                          selectedMaterials.map((material) => (
+                            <SelectedList
+                              key={material.id}
+                              material={material}
+                              onDelete={deleteListHandler}
+                              onEdit={editListHandler}
+                            />
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
 
-                <div className="md:max-w-sm">
-                  <label className="label-text" htmlFor="weight">
-                    Berat (kg)
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="0.5"
-                    className="input rounded-sm sm:max-w-20"
-                    id="weight"
-                    value={tempWeight}
-                    onChange={(e) => {
-                      setTempWeight(e.target.value);
-                    }}
-                  />
-                </div>
-                <div className=" flex items-end">
-                  <button
-                    className="btn btn-soft item rounded-sm"
-                    onClick={addTempMaterialToList}
-                  >
-                    Tambah ke list
-                  </button>
-                </div>
-
-                <div className="border-base-content/25 w-full overflow-x-auto border">
-                  <table className="table">
-                    <thead>
-                      <tr>
-                        <th>Jenis Sisa Sampah</th>
-                        <th>Berat</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {selectedMaterials &&
-                        selectedMaterials.map((material) => (
-                          <SelectedList
-                            key={material.id}
-                            material={material}
-                            onDelete={deleteListHandler}
-                            onEdit={editListHandler}
-                          />
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {messageAlert.type && (
-                  <CustomAlert
-                    type={messageAlert.type}
-                    message={messageAlert.message}
-                  />
-                )}
-
-                {userAlert.type && (
-                  <CustomAlert
-                    type={userAlert.type}
-                    message={userAlert.message}
-                  />
-                )}
-
-                <div className="flex flex-col gap-4">
-                  <button className="btn btn-soft" onClick={calculationHandler}>
-                    Dapatkan hasil perhitungan
-                  </button>
-
-                  {recommendations && (
-                    <RecommendationCard
-                      recommendations={recommendations}
-                      onClick={handleSave}
-                      isSaving={isSaving}
-                    />
-                  )}
-
-                  {successAlert.type && (
+                  {messageAlert.type && (
                     <CustomAlert
-                      type={successAlert.type}
-                      message={successAlert.message}
+                      type={messageAlert.type}
+                      message={messageAlert.message}
                     />
                   )}
+
+                  <div className="flex flex-col gap-4">
+                    <button
+                      className="btn btn-soft"
+                      onClick={calculationHandler}
+                    >
+                      Dapatkan hasil perhitungan
+                    </button>
+                    {recommendations && (
+                      <RecommendationCard
+                        recommendations={recommendations}
+                        onClick={handleSave}
+                        isSaving={isSaving}
+                      />
+                    )}
+
+                    {userAlert.type && (
+                      <CustomAlert
+                        type={userAlert.type}
+                        message={userAlert.message}
+                      />
+                    )}
+
+                    {successAlert.type && (
+                      <CustomAlert
+                        type={successAlert.type}
+                        message={successAlert.message}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </main>
+        </section>
       </div>
     </>
   );

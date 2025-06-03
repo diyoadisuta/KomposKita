@@ -78,7 +78,6 @@ export default async function handler(req, res) {
         const { fields, files } = await formData;
 
         const file = files.file?.[0];
-        console.log(files);
         const fileBuffer = fs.readFileSync(file.filepath);
 
         if (!file) {

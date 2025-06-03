@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
+import { mutate } from 'swr';
 
 export default function SignUp() {
   const router = useRouter();
@@ -16,9 +17,9 @@ export default function SignUp() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -26,7 +27,6 @@ export default function SignUp() {
     e.preventDefault();
     setError('');
 
-    // Validasi password
     if (formData.password !== formData.confirmPassword) {
       setError('Password dan konfirmasi password tidak cocok');
       return;
@@ -53,8 +53,8 @@ export default function SignUp() {
         throw new Error(data.message || 'Registrasi gagal');
       }
 
-      // Redirect ke halaman login setelah registrasi berhasil
-      router.push('/auth/signin');
+      mutate('/api/users/me');
+      router.push('/');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -89,7 +89,10 @@ export default function SignUp() {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Nama Lengkap
               </label>
               <div className="mt-1">
@@ -106,7 +109,10 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <div className="mt-1">
@@ -124,7 +130,10 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1">
@@ -141,7 +150,10 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Konfirmasi Password
               </label>
               <div className="mt-1">
@@ -173,7 +185,10 @@ export default function SignUp() {
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white text-gray-500">
                   Sudah punya akun?{' '}
-                  <Link href="/auth/signin" className="font-medium text-green-600 hover:text-green-500">
+                  <Link
+                    href="/auth/signin"
+                    className="font-medium text-green-600 hover:text-green-500"
+                  >
                     Masuk di sini
                   </Link>
                 </span>
@@ -184,4 +199,4 @@ export default function SignUp() {
       </div>
     </div>
   );
-} 
+}

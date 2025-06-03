@@ -6,21 +6,28 @@ export const RecommendationCard = ({ recommendations, onClick, isSaving }) => {
       </div>
       <div className="card-body">
         <div>
-          <p>Berat: {recommendations.details.totalWeight}</p>
-          <p>Jumlah Karbon: {recommendations.details.totalCarbon}</p>
-          <p>Jumlah Nitrogen: {recommendations.details.totalNitrogen}</p>
-          <p>
-            Rasio:
+          <p className="font-semibold">
+            Berat: {recommendations.details.totalWeight}
+          </p>
+          <p className="font-semibold">
+            Jumlah Karbon: {recommendations.details.totalCarbon}
+          </p>
+          <p className="font-semibold">
+            Jumlah Nitrogen: {recommendations.details.totalNitrogen}
+          </p>
+          <p className="font-semibold">
+            Rasio:{' '}
             {recommendations.cnRatio
               ? `${recommendations.cnRatio.toFixed(2)}:1`
               : 'N/A'}
           </p>
-          <p className="text-sm text-gray-600">Target ideal: 25-35:1</p>
-          <p>
-            {recommendations.isRecommended
-              ? '✅ Direkomendasikan'
-              : '⚠️ Tidak disarankan'}
-          </p>
+          <p className="text-sm text-gray-600 mt-2">Target ideal: 25-35:1</p>
+
+          {recommendations.isRecommended ? (
+            <p className="text-green-500 font-semibold">✅ Direkomendasikan</p>
+          ) : (
+            <p className="text-red-500 font-semibold">⚠️ Tidak disarankan</p>
+          )}
         </div>
 
         <p className="font-medium mb-2">{recommendations.message}</p>
