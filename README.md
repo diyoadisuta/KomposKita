@@ -1,4 +1,3 @@
-![Logo_KomposKita](https://github.com/user-attachments/assets/5b204b8f-b62e-4746-a493-4fee5ee0afd3)
 ![Logo_KomposKita](https://github.com/user-attachments/assets/a1df7a56-c5ec-47e4-a199-9ce7c7a5ac3d)
 
 
