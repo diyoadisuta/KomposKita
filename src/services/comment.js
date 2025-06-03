@@ -66,6 +66,7 @@ export class CommentService {
         message: true,
         createdAt: true,
         updatedAt: true,
+        userId: true,
         user: {
           select: {
             fullName: true,
@@ -75,9 +76,10 @@ export class CommentService {
     });
 
     return postCommentsData.map(
-      ({ id, user, message, createdAt, updatedAt }) => ({
+      ({ id, user, userId, message, createdAt, updatedAt }) => ({
         id,
         author: user.fullName,
+        userId,
         message,
         createdAt,
         updatedAt,
