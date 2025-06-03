@@ -206,9 +206,13 @@ export default function PostPage({ post, comments }) {
               {comments.map((comment) => (
                 <CommentCard
                   key={comment.id}
+                  id={comment.id}
+                  postId={post.id}
                   author={comment.author}
                   message={comment.message}
                   createdAt={comment.createdAt}
+                  userId={comment.userId}
+                  currentUser={user}
                 />
               ))}
             </div>
