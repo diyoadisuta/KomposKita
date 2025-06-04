@@ -60,12 +60,19 @@ export default function Rekomendasi() {
       const formData = new FormData();
       formData.append('image', file, file.name);
 
-      const response = await fetch('https://web-production-e2cf.up.railway.app/predict', {
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        'https://web-production-e2cf.up.railway.app/api/predicts',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
 
       const responseJson = await response.json();
+
+      if (responseJson.result.confidence < 0.75) {
+        setPredictionResult('Sampah Tidak Layak Kompos');
+      }
       setPredictionResult(responseJson.result.label);
     } catch (error) {
       console.error('prediction: error:', error);
@@ -87,66 +94,72 @@ export default function Rekomendasi() {
   };
 
   const handleCameraClick = async () => {
-  try {
-    setShowCamera(true);
-    
-    // Check if mediaDevices is supported
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      throw new Error('Camera API not supported on this device/browser');
-    }
+    try {
+      setShowCamera(true);
 
-    // Get list of available cameras
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const videoDevices = devices.filter(device => device.kind === 'videoinput');
-
-    const constraints = {
-      video: {
-        facingMode: facingMode,
-        width: { ideal: 1280, min: 320 },
-        height: { ideal: 720, min: 240 },
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Camera API not supported on this device/browser');
       }
-    };
 
-    // For mobile devices with multiple cameras
-    if (videoDevices.length > 1) {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const videoDevices = devices.filter(
+        (device) => device.kind === 'videoinput'
+      );
+
+      const constraints = {
+        video: {
+          facingMode: facingMode,
+          width: { ideal: 1280, min: 320 },
+          height: { ideal: 720, min: 240 },
+        },
+      };
+
+      // For mobile devices with multiple cameras
+      if (videoDevices.length > 1) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia(constraints);
+          streamRef.current = stream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+            // Ensure video plays on iOS Safari
+            videoRef.current.setAttribute('playsinline', true);
+          }
+        } catch (err) {
+          console.error('Error accessing specific camera:', err);
+          const basicStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+          });
+          streamRef.current = basicStream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = basicStream;
+          }
+        }
+      } else {
+        // For devices with single camera or desktop
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
         streamRef.current = stream;
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          // Ensure video plays on iOS Safari
-          videoRef.current.setAttribute('playsinline', true);
-        }
-      } catch (err) {
-        console.error('Error accessing specific camera:', err);
-        // Fallback to basic video constraints
-        const basicStream = await navigator.mediaDevices.getUserMedia({ video: true });
-        streamRef.current = basicStream;
-        if (videoRef.current) {
-          videoRef.current.srcObject = basicStream;
         }
       }
-    } else {
-      // For devices with single camera or desktop
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
+    } catch (err) {
+      console.error('Error accessing camera:', err);
+      setMessageAlert(
+        'error',
+        'Tidak dapat mengakses kamera. Pastikan browser memiliki izin mengakses kamera.'
+      );
     }
-  } catch (err) {
-    console.error('Error accessing camera:', err);
-    setMessageAlert('error', 'Tidak dapat mengakses kamera. Pastikan browser memiliki izin mengakses kamera.');
-  }
-};
+  };
 
-const switchCamera = async () => {
-  if (streamRef.current) {
-    streamRef.current.getTracks().forEach(track => track.stop());
-  }
-  setFacingMode(prevMode => prevMode === 'user' ? 'environment' : 'user');
-  handleCameraClick();
-};
+  const switchCamera = async () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+    }
+    setFacingMode((prevMode) => (prevMode === 'user' ? 'environment' : 'user'));
+    handleCameraClick();
+  };
 
   const captureImage = () => {
     if (videoRef.current) {
@@ -393,7 +406,7 @@ const switchCamera = async () => {
                   type="file"
                   ref={imageInput}
                   onChange={handleImageUpload}
-                  accept="image/*"
+                  accept="image/jpeg,image/jpg"
                   className="hidden"
                 />
 
@@ -427,7 +440,7 @@ const switchCamera = async () => {
               )}
 
               {showCamera && (
-                  <div className="mt-4">
+                <div className="mt-4">
                   <video
                     ref={videoRef}
                     autoPlay
@@ -454,7 +467,7 @@ const switchCamera = async () => {
                       Tutup Kamera
                     </button>
                   </div>
-                  </div>
+                </div>
               )}
 
               <div className="flex flex-row flex-wrap gap-4">

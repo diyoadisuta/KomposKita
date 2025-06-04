@@ -1,12 +1,10 @@
 export const UpdateProfile = ({
-  image,
   name,
   email,
   profileUpdateHandler,
   onChangeHandler,
   isChangingName,
 }) => {
-  // TODO: ADD CHANGE IMAGE PROFILE
   return (
     <>
       <form className="mt-4" onSubmit={profileUpdateHandler}>
