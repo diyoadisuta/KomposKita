@@ -61,11 +61,6 @@ Dataset berisi **12.464 gambar sampah** dan kami menyimpannya di Google Drive. D
 ## Front-End and Back-End Developer
 Techstack fullstack: Next.js
 
-🖌️ Tailwind FlyonUI component lib <br>
-🗃️ PostgreSQL dengan integrasi Prisma ORM dihost di Supabase <br>
-
-🚀 App Web dideploy di Vercel
-
 
 # Contact
 |          Nama         | Email |       Path       |
