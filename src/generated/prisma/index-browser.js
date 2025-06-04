@@ -132,17 +132,6 @@ exports.Prisma.UserScalarFieldEnum = {
   banExpires: 'banExpires'
 };
 
-exports.Prisma.SubscriptionTokenScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  endpoint: 'endpoint',
-  p256dh: 'p256dh',
-  auth: 'auth',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-};
-
 exports.Prisma.SavedCalculationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -195,7 +184,6 @@ exports.Prisma.CommentScalarFieldEnum = {
   id: 'id',
   postId: 'postId',
   message: 'message',
-  parentId: 'parentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
@@ -257,7 +245,6 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  SubscriptionToken: 'SubscriptionToken',
   SavedCalculation: 'SavedCalculation',
   CalculationDetail: 'CalculationDetail',
   Material: 'Material',

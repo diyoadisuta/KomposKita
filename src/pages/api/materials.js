@@ -1,4 +1,3 @@
-import { auth } from '@/lib/auth';
 import { MaterialService } from '@/services/material';
 
 export default async function handler(req, res) {

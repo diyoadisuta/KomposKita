@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   switch (req.method) {
     case 'POST':
-      const { message, parentId } = req.body;
+      const { message } = req.body;
 
       try {
         const session = await auth.api.getSession({
@@ -24,7 +24,6 @@ export default async function handler(req, res) {
           id,
           userId: session.user.id,
           userName: session.user.name,
-          parentId,
           message,
         });
         res.status(201).json({

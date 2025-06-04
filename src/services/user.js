@@ -1,5 +1,4 @@
-// import { authClient } from '@/lib/auth-client';
-import { NotFoundError, AuthenticationError } from '@/lib/errors';
+import { NotFoundError } from '@/lib/errors';
 import prisma from '@/lib/prisma';
 export class UserService {
   static async getUserById(userId) {
@@ -13,7 +12,7 @@ export class UserService {
         fullName: true,
         image: true,
         isSubscribed: true,
-      }
+      },
     });
 
     if (!userData) {
