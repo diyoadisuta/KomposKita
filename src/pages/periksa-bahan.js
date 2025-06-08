@@ -61,7 +61,7 @@ export default function Rekomendasi() {
       formData.append('image', file, file.name);
 
       const response = await fetch(
-        'https://web-production-e2cf.up.railway.app/api/predicts',
+        'https://web-production-05f70.up.railway.app/api/predicts',
         {
           method: 'POST',
           body: formData,

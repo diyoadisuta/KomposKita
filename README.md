@@ -61,6 +61,7 @@ Dataset berisi **12.464 gambar sampah** dan kami menyimpannya di Google Drive. D
 ## Front-End and Back-End Developer
 Techstack fullstack: Next.js
 
+
 1. Install dependencies:
 ```
 npm install
