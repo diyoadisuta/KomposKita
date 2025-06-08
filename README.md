@@ -62,6 +62,32 @@ Dataset berisi **12.464 gambar sampah** dan kami menyimpannya di Google Drive. D
 Techstack fullstack: Next.js
 
 
+1. Install dependencies:
+```
+npm install
+```
+
+2. Set up .env:
+```
+DATABASE_URL="YOUR_DATABASE_SUPABASE_URL"
+DIRECT_URL="YOUR_DIRECT_DATABASE_SUPABASE_URL"
+BETTER_AUTH_SECRET=YOUR_SECRET
+BETTER_AUTH_URL=YOUR_AUTH_URL
+
+NEXT_PUBLIC_SUPABASE_URL=YOUR_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
+```
+
+3. Run development mode:
+```
+npm run dev
+```
+
+4. Or build/production mode:
+```
+npm run build
+```
+
 # Contact
 |          Nama         | Email |       Path       |
 |:---------------------:|:----------:|:----------------:|
