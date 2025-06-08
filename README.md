@@ -82,7 +82,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 npm run dev
 ```
 
-3. Or build/production mode:
+4. Or build/production mode:
 ```
 npm run build
 ```
