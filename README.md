@@ -60,7 +60,7 @@ Dataset berisi **12.464 gambar sampah** dan kami menyimpannya di Google Drive. D
 
 ## Front End
 - Next
-- 
+  
 penjelasan
 
 
@@ -73,3 +73,4 @@ penjelasan
 |  Delvia   |  delvia.yi39@gmail.com   |  FEBE |
 |  Delwinro Purba Siboro  |  dev588sibolis@gmail.com   |  FEBE |
 |  Dio Adista Laksono     |  diyoadisuta@gmail.com   |      FEBE     |
+
